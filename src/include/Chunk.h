@@ -36,6 +36,7 @@ struct Block
 
 	//block-scale typedef
 	typedef unsigned short Position;
+	typedef long long GlobalPosition;
 	typedef enum
 	{
 		AIR = 0,
@@ -47,67 +48,78 @@ struct Block
 	static const unsigned short Block::typeNum = 5;
 };
 
-struct Chunk
+class Chunk
 {
-	static constexpr Block::Position sizeX = 32, sizeY = 128, sizeZ = 32;
+public:
+	static constexpr Block::Position sizeX = 32;
+	static constexpr Block::Position sizeY = 3128;
+	static constexpr Block::Position sizeZ = 32;
 
 	typedef int Position;
 	typedef glm::ivec2 PosVec;
-};
 
-
-const Chunk::Position renderSize = 10;
-
-
-//world-scale definition
-typedef long long globalBlockPos;
-
-
-//init renderer
-void initBlockRenderer();
-
-class World
-{
-public:
-	World(Chunk::PosVec position): 
-		chunkX(position.x), chunkZ(position.y), 
-		needUpdate(false), 
-		vao(0), vbo(0), 
+	Chunk(Chunk::PosVec position) :
+		chunkX(position.x), chunkZ(position.y),
+		needUpdate(false),
+		vao(0), vbo(0),
 		debugVao(0), debugVbo(0),
 		data() {};
-	
-	~World();
 
-	void generate(globalBlockPos noiseX, globalBlockPos noiseZ);
+	~Chunk();
+
+
+	void generate(Block::GlobalPosition noiseX, Block::GlobalPosition noiseZ);
 	void draw();
 	void update();
 	void save();
 	bool load();
 	void debug();
 	Chunk::Position chunkX, chunkZ;
+
 	bool needUpdate;
-private:
-	//enlarged for surrounding block detection
 	Block::Type data[Chunk::sizeX + 2][Chunk::sizeY + 2][Chunk::sizeZ + 2];
+private:
 
-	//split vertices by different texture
-	std::vector<Vertex> verticesBuffer[Block::typeNum];
-
-	friend Block::Type getBlockType(const globalBlockPos &x, const globalBlockPos &y, const globalBlockPos &z, const World* currentChunk);
-	friend Block::Type getBlockType(const globalBlockPos &x, const globalBlockPos &y, const globalBlockPos &z);
-	//rendering stuffs
 	GLuint vao, vbo, debugVao, debugVbo;
-	GLsizei verticesOffset[Block::typeNum + 1];//offset between vertices
+	std::vector<Vertex> verticesBuffer[Block::typeNum];
+	GLsizei verticesOffset[Block::typeNum + 1];
+
 	void addBlockVertices(const Block::Position & x, const Block::Position & y, const Block::Position & z, std::vector<Vertex> verticesGroups[]);
 };
 
+class World
+{
+public:
+	static constexpr Chunk::Position renderSize = 2;
+	
+	World();
 
-//render chunks
-void drawWorld();
-void drawWorldDebug();
-void enableUpdateThread();
-void disableUpdateThread();
-void updateWorldLoop();
+	//render chunks
+	void draw();
+	void drawDebug();
 
-void loadChunk(Chunk::PosVec position);
-Block::Type getBlockType(const globalBlockPos &x, const globalBlockPos &y, const globalBlockPos &z, const World* currentChunk);
+	void enableUpdateThread();
+	void disableUpdateThread();
+
+	void updateWorldLoop();
+private:
+	std::list<Chunk*> *frontDrawBuffer;
+	std::list<Chunk*> *backDrawBuffer;
+	std::list<Chunk*> unloadBuffer;
+
+	struct KeyHasher
+	{
+		std::size_t operator()(const Chunk::PosVec& key) const
+		{
+			return ((key.x * 5209) ^ (key.y * 1811));
+		}
+	};
+
+	std::unordered_map <Chunk::PosVec, Chunk*, KeyHasher> chunkMap;
+	std::mutex bufferLock;
+
+	std::thread updateThread;
+	bool updateThreadShouldClose;
+
+	void loadChunk(Chunk::PosVec position);
+};

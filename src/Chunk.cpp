@@ -1,5 +1,6 @@
 #include "Chunk.h"
 
+
 GLuint blockTexture[Block::typeNum];
 
 const glm::fvec3 Block::vertexPositions[]
@@ -58,23 +59,7 @@ const glm::ivec2 Block::vertexTexCoords[6]
 	glm::vec2(0,0)
 };
 
-std::list<World*> *frontDrawBuffer;
-std::list<World*>	*backDrawBuffer;
-std::list<World*> unloadBuffer;
-
-void initBlockRenderer()
-{
-	frontDrawBuffer = new std::list<World*>;
-	backDrawBuffer = new std::list<World*>;
-
-	//load blocks' textures
-	blockTexture[Block::Type::DIRT] = Texture("D:\\Projects\\Blocky - OpenGL\\src\\resource\\dirt.bmp", texture_diffuse_map);
-	blockTexture[Block::Type::COBBLESTONE] = Texture("D:\\Projects\\Blocky - OpenGL\\src\\resource\\cobblestone.bmp", texture_diffuse_map);
-	blockTexture[Block::Type::GRASS] = Texture("D:\\Projects\\Blocky - OpenGL\\src\\resource\\grass.bmp", texture_diffuse_map);
-	blockTexture[Block::Type::BEDROCK] = Texture("D:\\Projects\\Blocky - OpenGL\\src\\resource\\bedrock.bmp", texture_diffuse_map);
-}
-
-World::~World()
+Chunk::~Chunk()
 {
 	glDeleteVertexArrays(1, &vao);
 	glDeleteVertexArrays(1, &debugVao);
@@ -82,7 +67,7 @@ World::~World()
 	glDeleteBuffers(1, &debugVbo);
 }
 
-void World::generate(globalBlockPos noiseX, globalBlockPos noiseZ)
+void Chunk::generate(Block::GlobalPosition noiseX, Block::GlobalPosition noiseZ)
 {
 	//(perlinNoise2D((noiseX + x - 1) / 20.0, (noiseZ + z - 1) / 20.0) + 1) * 50
 	for (Block::Position x = 0; x !=  Chunk::sizeX + 2; ++x)
@@ -93,12 +78,12 @@ void World::generate(globalBlockPos noiseX, globalBlockPos noiseZ)
 				y < (glm::simplex(glm::vec2((x + noiseX)/10.0,(z + noiseZ)/10.0)) + 1) * 10;
 				++y)
 			{
-				data[x][y][z] = static_cast<Block::Type>(3);
+				data[x][y][z] = static_cast<Block::Type>(Block::Type::DIRT);
 			}
 		}
 }
 
-void World::draw()
+void Chunk::draw()
 {
 	if (this->needUpdate)
 	{
@@ -137,7 +122,7 @@ void World::draw()
 	glBindVertexArray(NULL);
 }
 
-void World::update()
+void Chunk::update()
 {
 	for (auto i = decltype(Block::typeNum)(); i != Block::typeNum; ++i)
 		verticesBuffer[i].clear();
@@ -160,10 +145,10 @@ void World::update()
 	this->needUpdate = true;
 }
 
-void World::save()
+void Chunk::save()
 {
 	std::ofstream chunkFile;
-	chunkFile.open("Saves/chunk" + std::to_string(chunkX) + "," + std::to_string(chunkZ) + ".dat", std::ios::out | std::ios::trunc | std::ios::binary);
+	chunkFile.open("Saves\\chunk" + std::to_string(chunkX) + "," + std::to_string(chunkZ) + ".dat", std::ios::out | std::ios::trunc | std::ios::binary);
 	if (chunkFile.good())
 	{
 		for (const auto &i : this->data)
@@ -176,10 +161,10 @@ void World::save()
 	chunkFile.close();
 }
 
-bool World::load()
+bool Chunk::load()
 {
 	std::ifstream chunkFile;
-	chunkFile.open("Saves/chunk" + std::to_string(chunkX) + "," + std::to_string(chunkZ) + ".dat", std::ios::in | std::ios::binary);
+	chunkFile.open("Saves\\chunk" + std::to_string(chunkX) + "," + std::to_string(chunkZ) + ".dat", std::ios::in | std::ios::binary);
 	if (!chunkFile.good())
 	{
 		chunkFile.close();
@@ -195,7 +180,7 @@ bool World::load()
 	return true;
 }
 
-void World::debug()
+void Chunk::debug()
 {
 	if (!this->debugVao)
 	{
@@ -256,7 +241,7 @@ void World::debug()
 	glBindVertexArray(NULL);
 }
 
-void World::addBlockVertices(const Block::Position &x, const Block::Position &y, const Block::Position &z, std::vector<Vertex> verticesGroups[])
+void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y, const Block::Position &z, std::vector<Vertex> verticesGroups[])
 {
 	//do nothing if the block is air
 	if (data[x][y][z] == Block::Type::AIR)
@@ -337,20 +322,20 @@ void World::addBlockVertices(const Block::Position &x, const Block::Position &y,
 	}
 }
 
-
-struct KeyHasher
+//Must initialize after GL is set up.
+World::World() :
+	frontDrawBuffer(new std::list<Chunk*>), backDrawBuffer(new std::list<Chunk*>), unloadBuffer(),
+	updateThread(&World::updateWorldLoop, this)
 {
-	std::size_t operator()(const Chunk::PosVec& key) const
-	{
-		return ((key.x * 5209) ^ (key.y * 1811));
-	}
-};
+	blockTexture[Block::Type::AIR] = 0;
+	blockTexture[Block::Type::DIRT] = Texture("..\\src\\resource\\dirt.bmp", texture_diffuse_map);
+	blockTexture[Block::Type::COBBLESTONE] = Texture("..\\src\\resource\\cobblestone.bmp", texture_diffuse_map);
+	blockTexture[Block::Type::GRASS] = Texture("..\\src\\resource\\grass.bmp", texture_diffuse_map);
+	blockTexture[Block::Type::BEDROCK] = Texture("..\\src\\resource\\bedrock.bmp", texture_diffuse_map);
+}
+		
 
-std::unordered_map <Chunk::PosVec, World*, KeyHasher> chunkMap;
-
-std::mutex bufferLock;
-
-void drawWorld()
+void World::draw()
 {
 	bufferLock.lock();
 	if (frontDrawBuffer)
@@ -363,7 +348,7 @@ void drawWorld()
 	bufferLock.unlock();
 }
 
-void drawWorldDebug()
+void World::drawDebug()
 {
 	bufferLock.lock();
 	if (frontDrawBuffer)
@@ -376,21 +361,18 @@ void drawWorldDebug()
 	bufferLock.unlock();
 }
 
-bool updateThreadShouldClose;
-std::thread updateThread;
-void enableUpdateThread()
+void World::enableUpdateThread()
 {
-	updateThread = std::thread(updateWorldLoop);
 	updateThreadShouldClose = false;
 	updateThread.detach();
 }
 
-void disableUpdateThread()
+void World::disableUpdateThread()
 {
 	updateThreadShouldClose = true;
 }
 
-void updateWorldLoop()
+void World::updateWorldLoop()
 {	
 	Chunk::Position currentRenderSize = 0;
 
@@ -400,7 +382,7 @@ void updateWorldLoop()
 		backDrawBuffer->clear();
 
 		//increase load radius gradually
-		if (currentRenderSize < renderSize)
+		if (currentRenderSize < World::renderSize)
 			currentRenderSize++;
 
 		//load chunks around current position within load radius
@@ -415,7 +397,7 @@ void updateWorldLoop()
 		for (auto i = backDrawBuffer->begin(); i != backDrawBuffer->end();)
 		{
 			auto j = *i;
-			if ((abs((j)->chunkX - currentPosition.x) > renderSize / 2) || (abs((j)->chunkZ - currentPosition.y) > renderSize / 2))
+			if ((abs((j)->chunkX - currentPosition.x) > World::renderSize / 2) || (abs((j)->chunkZ - currentPosition.y) > World::renderSize / 2))
 			{
 				i = backDrawBuffer->erase(i);
 				unloadBuffer.push_back(j);
@@ -426,8 +408,10 @@ void updateWorldLoop()
 				++i;
 			}
 		}
-		bufferLock.lock();
+		sendError(".");
+
 		//swap two buffer of chunks
+		bufferLock.lock();
 		std::swap(frontDrawBuffer, backDrawBuffer);
 		bufferLock.unlock();
 
@@ -439,7 +423,6 @@ void updateWorldLoop()
 			delete i;
 		}
 		unloadBuffer.clear();
-		
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 	}
@@ -453,11 +436,11 @@ void updateWorldLoop()
 	delete backDrawBuffer;
 }
 
-void loadChunk(Chunk::PosVec position)
+void World::loadChunk(Chunk::PosVec position)
 {
 	if (chunkMap.find(position) == chunkMap.end())
 	{
-		chunkMap[position] = new World(position);
+		chunkMap[position] = new Chunk(position);
 
 		if (!chunkMap[position]->load())
 		{
@@ -466,44 +449,4 @@ void loadChunk(Chunk::PosVec position)
 	}
 
 	backDrawBuffer->push_back(chunkMap[position]);
-}
-
-
-//MAP RESOURCE CONFLICT WITH MAINTHREAD
-Block::Type getBlockType(const globalBlockPos &x, const globalBlockPos &y, const globalBlockPos &z)
-{
-	if (y >= Chunk::sizeY || y < 0)
-	{
-		sendError("getBlockType: abnormal y-value receieved");
-		return Block::Type::AIR;
-	}
-
-	Block::Position localX, localY, localZ;
-	Chunk::Position localChunkX, localChunkZ;
-
-	localY = (Block::Position)y;
-
-	localX = (Block::Position)(x % Chunk::sizeX);
-	localChunkX = (Chunk::Position)(x / Chunk::sizeX);
-	if (x < 0)
-	{
-		localX += Chunk::sizeX;
-		localChunkX--;
-	}
-
-	localZ = (Block::Position)(z % Chunk::sizeZ);
-	localChunkZ = (Chunk::Position)(z / Chunk::sizeZ);
-	if (z < 0)
-	{
-		localZ += Chunk::sizeZ;
-		localChunkZ--;
-	}
-
-	if (chunkMap.find(Chunk::PosVec(localChunkX, localChunkZ)) == chunkMap.end())
-	{
-		//sendError("getBlockType: positioned chunk invalid");
-		return Block::Type::AIR;
-	}
-
-	return chunkMap[Chunk::PosVec(localChunkX, localChunkZ)]->data[localX][localY][localZ];
 }

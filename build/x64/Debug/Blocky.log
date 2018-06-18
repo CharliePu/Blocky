@@ -1,7 +1,5 @@
-﻿  Blocky.cpp
-  Generating Code...
-  Compiling...
-  Chunk.cpp
+﻿  Chunk.cpp
+  Blocky.cpp
   Generating Code...
   SOIL.lib(SOIL.obj) : MSIL .netmodule or module compiled with /GL found; restarting link with /LTCG; add /LTCG to the link command line to improve linker performance
 LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
@@ -55,4 +53,3 @@ Shader.obj : warning LNK4049: locally defined symbol __glewUniformMatrix4fv impo
 Shader.obj : warning LNK4049: locally defined symbol __glewUseProgram imported
 Texture.obj : warning LNK4049: locally defined symbol __glewGenerateMipmap imported
   Blocky.vcxproj -> D:\Projects\Blocky - OpenGL\build\x64\Debug\Blocky.exe
-  Blocky.vcxproj -> D:\Projects\Blocky - OpenGL\build\x64\Debug\Blocky.pdb (Partial PDB)

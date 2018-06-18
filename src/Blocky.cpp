@@ -7,9 +7,11 @@ int main()
 {
 	initEnv();
 
-	Shader shader("../src/shaders/block.vsh", "../src/shaders/block.fsh"), debugShader("../src/shaders/debug.vsh", "../src/shaders/debug.fsh");
+	Shader shader("..\\src\\shaders\\block.vsh", "..\\src\\shaders\\block.fsh"), debugShader("../src/shaders/debug.vsh", "../src/shaders/debug.fsh");
 	
-	enableUpdateThread();
+	World aWorld;
+
+	aWorld.enableUpdateThread();
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -23,16 +25,17 @@ int main()
 		updateViewMatrix(getCameraFront(), getCameraViewMatrix());
 		updateModelMatrix(glm::vec3(0, 0, 0));
 
-		drawWorld();
+		aWorld.draw();
 
 		debugShader.use();
 		updateProjectionMatrix(45, windowWidth / (double)windowHeight, 0.1, 1000);
 		updateViewMatrix(getCameraFront(), getCameraViewMatrix());
 		updateModelMatrix(glm::vec3(0, 0, 0));
 
-		drawWorldDebug();
+		aWorld.drawDebug();
 	}
-	disableUpdateThread();
+
+	aWorld.disableUpdateThread();
 	glfwTerminate();
 	return 0;
 }
@@ -84,8 +87,6 @@ void initEnv()
 
 	//init camera
 	initCamera(glm::vec3(7, 7, 14));
-
-	initBlockRenderer();
 }
 
 void updateEnv()
