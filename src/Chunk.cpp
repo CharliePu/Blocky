@@ -58,8 +58,15 @@ const glm::ivec2 Block::vertexTexCoords[6]
 	glm::vec2(0,0)
 };
 
+std::list<World*> *frontDrawBuffer;
+std::list<World*>	*backDrawBuffer;
+std::list<World*> unloadBuffer;
+
 void initBlockRenderer()
 {
+	frontDrawBuffer = new std::list<World*>;
+	backDrawBuffer = new std::list<World*>;
+
 	//load blocks' textures
 	blockTexture[Block::Type::DIRT] = Texture("D:\\Projects\\Blocky - OpenGL\\src\\resource\\dirt.bmp", texture_diffuse_map);
 	blockTexture[Block::Type::COBBLESTONE] = Texture("D:\\Projects\\Blocky - OpenGL\\src\\resource\\cobblestone.bmp", texture_diffuse_map);
@@ -81,11 +88,12 @@ void World::generate(globalBlockPos noiseX, globalBlockPos noiseZ)
 	for (Block::Position x = 0; x !=  Chunk::sizeX + 2; ++x)
 		for (Block::Position z = 0; z != Chunk::sizeZ + 2; ++z)
 		{
+			
 			for (Block::Position y = 0; 
-				y != static_cast<Block::Position>(3) && y != Chunk::sizeY;
+				y < (glm::simplex(glm::vec2((x + noiseX)/10.0,(z + noiseZ)/10.0)) + 1) * 10;
 				++y)
 			{
-				data[x][y][z] = Block::Type::COBBLESTONE;
+				data[x][y][z] = static_cast<Block::Type>(3);
 			}
 		}
 }
@@ -99,11 +107,13 @@ void World::draw()
 			glGenVertexArrays(1, &this->vao);
 			glGenBuffers(1, &this->vbo);
 		}
+		if (vao == 0 || vbo == 0)
+			sendError("Shit again!");
 
 		glBindVertexArray(this->vao);
 		//bind and upload vertices data
 		glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-		glBufferData(GL_ARRAY_BUFFER, verticesBuffer[Block::Type::AIR].size() * sizeof(Vertex), &verticesBuffer[Block::Type::AIR][0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, verticesBuffer[0].size() * sizeof(Vertex), &verticesBuffer[0][0], GL_STATIC_DRAW);
 		//set position
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
@@ -327,32 +337,28 @@ void World::addBlockVertices(const Block::Position &x, const Block::Position &y,
 	}
 }
 
+
 struct KeyHasher
 {
 	std::size_t operator()(const Chunk::PosVec& key) const
 	{
-		using std::size_t;
-		using std::hash;
-
 		return ((key.x * 5209) ^ (key.y * 1811));
 	}
 };
 
 std::unordered_map <Chunk::PosVec, World*, KeyHasher> chunkMap;
 
-std::vector<World*> *frontDrawBuffer;
-std::vector<World*>	*backDrawBuffer;
-
-
-std::mutex updateLock;
 std::mutex bufferLock;
 
 void drawWorld()
 {
 	bufferLock.lock();
-	for (auto i : *frontDrawBuffer)
+	if (frontDrawBuffer)
 	{
-		i->draw();
+		for (auto i : *frontDrawBuffer)
+		{
+				i->draw();
+		}
 	}
 	bufferLock.unlock();
 }
@@ -360,9 +366,12 @@ void drawWorld()
 void drawWorldDebug()
 {
 	bufferLock.lock();
-	for (auto i : *frontDrawBuffer)
+	if (frontDrawBuffer)
 	{
-		i->debug();
+		for (auto i : *frontDrawBuffer)
+		{
+			i->debug();
+		}
 	}
 	bufferLock.unlock();
 }
@@ -372,23 +381,17 @@ std::thread updateThread;
 void enableUpdateThread()
 {
 	updateThread = std::thread(updateWorldLoop);
-	updateThread.detach();
 	updateThreadShouldClose = false;
+	updateThread.detach();
 }
 
 void disableUpdateThread()
 {
-	updateLock.lock();
 	updateThreadShouldClose = true;
-	updateLock.unlock();
-	std::this_thread::sleep_for(std::chrono::milliseconds(500));
 }
 
 void updateWorldLoop()
-{
-	frontDrawBuffer = new std::vector<World*>;
-	backDrawBuffer = new std::vector<World*>;
-	
+{	
 	Chunk::Position currentRenderSize = 0;
 
 	while (!updateThreadShouldClose)
@@ -408,34 +411,37 @@ void updateWorldLoop()
 				loadChunk(Chunk::PosVec(currentPosition) - currentRenderSize / 2 + Chunk::PosVec(i, j));
 			}
 
-		updateLock.lock();
-		//update chunks that needed
-		for (auto i : *backDrawBuffer)
+		//delete far chunk, update modified chunk
+		for (auto i = backDrawBuffer->begin(); i != backDrawBuffer->end();)
 		{
-			if (!i->needUpdate)
+			auto j = *i;
+			if ((abs((j)->chunkX - currentPosition.x) > renderSize / 2) || (abs((j)->chunkZ - currentPosition.y) > renderSize / 2))
 			{
-				i->update();
+				i = backDrawBuffer->erase(i);
+				unloadBuffer.push_back(j);
+			}
+			else if (!j -> needUpdate)
+			{
+				j->update();
+				++i;
 			}
 		}
-
 		bufferLock.lock();
 		//swap two buffer of chunks
 		std::swap(frontDrawBuffer, backDrawBuffer);
 		bufferLock.unlock();
 
 		//unload chunks
-		for (auto i : *backDrawBuffer)
+		for (auto i : unloadBuffer)
 		{
-			if ((abs(i->chunkX - currentPosition.x) > renderSize/2) || (abs(i->chunkZ - currentPosition.y) > renderSize/2))
-			{
-				i->save();
-				chunkMap.erase(Chunk::PosVec(i->chunkX, i->chunkZ));
-				delete i;
-			}
+			i->save();
+			chunkMap.erase(Chunk::PosVec(i->chunkX, i->chunkZ));
+			delete i;
 		}
-		updateLock.unlock();
+		unloadBuffer.clear();
+		
 
-	//	std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 	}
 
 	for (auto i : chunkMap)
@@ -449,62 +455,21 @@ void updateWorldLoop()
 
 void loadChunk(Chunk::PosVec position)
 {
-	updateLock.lock();
-	if (!chunkMap[position])
+	if (chunkMap.find(position) == chunkMap.end())
 	{
 		chunkMap[position] = new World(position);
+
 		if (!chunkMap[position]->load())
 		{
 			chunkMap[position]->generate(position.x*Chunk::sizeX, position.y*Chunk::sizeZ);
 		}
 	}
+
 	backDrawBuffer->push_back(chunkMap[position]);
-	updateLock.unlock();
 }
 
-Block::Type getBlockType(const globalBlockPos &x, const globalBlockPos &y, const globalBlockPos &z, const World* currentChunk)
-{
-	if (!currentChunk)
-	{
-		sendError("getBlockType: nullptr receieved");
-		return Block::Type::AIR;
-	}
-	if (y >= Chunk::sizeY || y < 0)
-	{
-		sendError("getBlockType: abnormal y-value receieved");
-		return Block::Type::AIR;
-	}
-	
-	Block::Position localX, localY, localZ;
-	Chunk::Position offSetchunkX, offSetChunkZ;
 
-	localY = (Block::Position)y;
-
-	localX = (Block::Position)(x % Chunk::sizeX);
-	offSetchunkX = (Chunk::Position)(x / Chunk::sizeX);
-	if (x < 0)
-	{
-		localX += Chunk::sizeX;
-		offSetchunkX--;
-	}
-
-	localZ = (Block::Position)(z % Chunk::sizeZ);
-	offSetChunkZ = (Chunk::Position)(z / Chunk::sizeZ);
-	if (z < 0)
-	{
-		localZ += Chunk::sizeZ;
-		offSetChunkZ--;
-	}
-
-	if (chunkMap.find(Chunk::PosVec(offSetchunkX + currentChunk->chunkX, offSetChunkZ + currentChunk->chunkZ))==chunkMap.end())
-	{
-		//sendError("getBlockType: positioned chunk invalid");
-		return Block::Type::AIR;
-	}
-
-	return chunkMap[Chunk::PosVec(offSetchunkX + currentChunk->chunkX, offSetChunkZ + currentChunk->chunkZ)]->data[localX][localY][localZ];
-}
-
+//MAP RESOURCE CONFLICT WITH MAINTHREAD
 Block::Type getBlockType(const globalBlockPos &x, const globalBlockPos &y, const globalBlockPos &z)
 {
 	if (y >= Chunk::sizeY || y < 0)

@@ -8,7 +8,6 @@ float cameraSpeed, cursorSensitivity;
 
 void initCamera(const glm::vec3 &position)
 {
-	sendError("init camera");
 	cameraPos = position;
 	cameraFront = glm::vec3(0.0f, 0.0f,1.0f);
 	cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -18,7 +17,6 @@ void initCamera(const glm::vec3 &position)
 
 void setCameraFront(const glm::vec3 direction)
 {
-	sendError("set camera front");
 	cameraFront = direction;
 }
 
@@ -46,13 +44,13 @@ void updateCameraKeyCallback()
 	deltaTime = currentTime - lastTime;
 
 	if (glfwGetKey(window, GLFW_KEY_W))
-		cameraPos -= cameraSpeed*cameraFront*deltaTime;
+		cameraPos -= cameraSpeed*cameraFront *deltaTime * glm::vec3(1, 0, 1);
 	if (glfwGetKey(window, GLFW_KEY_S))
-		cameraPos += cameraSpeed*cameraFront*cameraFront*deltaTime;
+		cameraPos += cameraSpeed*cameraFront*deltaTime * glm::vec3(1, 0, 1);
 	if (glfwGetKey(window, GLFW_KEY_A))
-		cameraPos += cameraSpeed*cameraRight*deltaTime;
+		cameraPos += cameraSpeed*cameraRight*deltaTime * glm::vec3(1, 0, 1);
 	if (glfwGetKey(window, GLFW_KEY_D))
-		cameraPos -= cameraSpeed*cameraRight*deltaTime;
+		cameraPos -= cameraSpeed*cameraRight*deltaTime * glm::vec3(1, 0, 1);
 	if (glfwGetKey(window, GLFW_KEY_SPACE))
 		cameraPos += cameraSpeed*cameraUp*deltaTime;
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT))

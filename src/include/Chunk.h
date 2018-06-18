@@ -38,18 +38,18 @@ struct Block
 	typedef unsigned short Position;
 	typedef enum
 	{
-		AIR,
-		DIRT,
-		COBBLESTONE,
-		GRASS,
-		BEDROCK
+		AIR = 0,
+		DIRT = 1,
+		COBBLESTONE = 2,
+		GRASS = 3,
+		BEDROCK = 4
 	} Type;
 	static const unsigned short Block::typeNum = 5;
 };
 
 struct Chunk
 {
-	static constexpr Block::Position sizeX = 16, sizeY = 128, sizeZ = 16;
+	static constexpr Block::Position sizeX = 32, sizeY = 128, sizeZ = 32;
 
 	typedef int Position;
 	typedef glm::ivec2 PosVec;
@@ -57,7 +57,6 @@ struct Chunk
 
 
 const Chunk::Position renderSize = 10;
-const int checkInterval = 5;
 
 
 //world-scale definition
@@ -76,7 +75,7 @@ public:
 		vao(0), vbo(0), 
 		debugVao(0), debugVbo(0),
 		data() {};
-
+	
 	~World();
 
 	void generate(globalBlockPos noiseX, globalBlockPos noiseZ);

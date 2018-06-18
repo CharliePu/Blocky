@@ -54,8 +54,8 @@ void initEnv()
 	glfwWindowHint(GLFW_SAMPLES, 4);
 
 	//create glfw window
-	windowWidth = 2000;
-	windowHeight = 1500;
+	windowWidth = 1500;
+	windowHeight = 500;
 	window = glfwCreateWindow(windowWidth, windowHeight, "EasyMinecraft", nullptr, nullptr);
 	if (window == nullptr)
 	{
@@ -110,7 +110,7 @@ void updateEnv()
 		frameRate = 0;
 		lastTime = glfwGetTime();
 	}
-	glfwSetWindowTitle(window, ("EasyMinecraft[FPS:" + std::to_string(FPS) + "\tPosition:" + std::to_string((int)getCameraPosition().x) + "," + std::to_string((int)getCameraPosition().y) + "," + std::to_string((int)getCameraPosition().z)+"]").c_str());
+	glfwSetWindowTitle(window, ("Blocky[FPS:" + std::to_string(FPS) + "\tPosition:" + std::to_string((int)getCameraPosition().x) + "," + std::to_string((int)getCameraPosition().y) + "," + std::to_string((int)getCameraPosition().z)+"]").c_str());
 }
 
 void updateWindowKeyCallback()
