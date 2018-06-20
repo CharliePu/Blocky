@@ -13,30 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\GL">
+      <UniqueIdentifier>{09a25439-5762-4aef-aac5-eb3d6ad953e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GL">
+      <UniqueIdentifier>{822b4d71-8366-4b23-9e5b-343b9bf3c2f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\include\Framebuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\Lighting.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\include\Debug.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\Blocky.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\include\Chunk.h">
@@ -45,36 +30,69 @@
     <ClInclude Include="..\src\include\Noise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\include\World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\Block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\Main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\GLCamera.h">
+      <Filter>Header Files\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\GLFramebuffer.h">
+      <Filter>Header Files\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\GLLighting.h">
+      <Filter>Header Files\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\GLShader.h">
+      <Filter>Header Files\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\GLTexture.h">
+      <Filter>Header Files\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Debug.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Framebuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Lighting.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Noise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Shader.cpp">
+    <ClCompile Include="..\src\Chunk.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\World.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Block.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GLTexture.cpp">
+      <Filter>Source Files\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GLShader.cpp">
+      <Filter>Source Files\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GLLighting.cpp">
+      <Filter>Source Files\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GLFramebuffer.cpp">
+      <Filter>Source Files\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GLCamera.cpp">
+      <Filter>Source Files\GL</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Blocky.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Chunk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

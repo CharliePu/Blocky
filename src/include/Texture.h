@@ -1,43 +1,29 @@
 #pragma once
+#include <iostream>
 #include <string>
-#include <vector>
+#include <array>
 
-#include <GL\glew.h>
-#include <GLFW\glfw3.h>
-#include <SOIL\SOIL.h>
-#include <glm\glm.hpp>
-
-#include "Debug.h"
-
-
-enum textureType
-{
-	texture_diffuse_map,
-	texture_specular_map,
-	texture_reflection_map,
-	texture_cube_map,
-	texture_atlas
-};
+#include "Block.h"
+#include "GLTexture.h"
 
 class Texture
 {
 public:
-	textureType type;
-	std::string path;
-
-	//load diffuse map or specular map
-	Texture(const std::string &path, const textureType &type);
-	//load cube map
-	Texture(const std::vector<std::string> paths);
-	//load manually
-	Texture(const GLuint &id, const textureType &type);
-	//do nothing
-	Texture() {};
-
-
-	operator GLuint();
+	//construct it after GL is initialized
+	static void init(const std::string &path);
+	
+	static GLTexture get(Block::Type type);
+	static GLTexture get(decltype(Block::typeNum) type);
 private:
-	GLuint id;
+	static std::array<GLTexture, Block::typeNum> textures;
 };
 
-glm::vec2 getTextureAtlasCoords(const unsigned short & xNum, const unsigned short & yNum, const unsigned short & subTextureID, const glm::vec2 &subTexCoords);
+inline GLTexture Texture::get(Block::Type type)
+{
+	return textures[static_cast<size_t>(type)];
+}
+
+inline GLTexture Texture::get(decltype(Block::typeNum) type)
+{
+	return textures[static_cast<decltype(Block::typeNum)>(type)];
+}

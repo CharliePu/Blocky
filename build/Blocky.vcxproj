@@ -19,28 +19,32 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\include\Block.h" />
     <ClInclude Include="..\src\include\Chunk.h" />
-    <ClInclude Include="..\src\include\Camera.h" />
+    <ClInclude Include="..\src\include\GLCamera.h" />
     <ClInclude Include="..\src\include\Debug.h" />
-    <ClInclude Include="..\src\include\Framebuffer.h" />
-    <ClInclude Include="..\src\include\Blocky.h" />
-    <ClInclude Include="..\src\include\Lighting.h" />
-    <ClInclude Include="..\src\include\Mesh.h" />
+    <ClInclude Include="..\src\include\GLFramebuffer.h" />
+    <ClInclude Include="..\src\include\Main.h" />
+    <ClInclude Include="..\src\include\GLLighting.h" />
     <ClInclude Include="..\src\include\Noise.h" />
-    <ClInclude Include="..\src\include\Shader.h" />
+    <ClInclude Include="..\src\include\GLShader.h" />
+    <ClInclude Include="..\src\include\GLTexture.h" />
     <ClInclude Include="..\src\include\Texture.h" />
+    <ClInclude Include="..\src\include\World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Block.cpp" />
     <ClCompile Include="..\src\Chunk.cpp" />
-    <ClCompile Include="..\src\Camera.cpp" />
+    <ClCompile Include="..\src\GLCamera.cpp" />
     <ClCompile Include="..\src\Debug.cpp" />
-    <ClCompile Include="..\src\Framebuffer.cpp" />
-    <ClCompile Include="..\src\Blocky.cpp" />
-    <ClCompile Include="..\src\Lighting.cpp" />
-    <ClCompile Include="..\src\Mesh.cpp" />
+    <ClCompile Include="..\src\GLFramebuffer.cpp" />
+    <ClCompile Include="..\src\Main.cpp" />
+    <ClCompile Include="..\src\GLLighting.cpp" />
     <ClCompile Include="..\src\Noise.cpp" />
-    <ClCompile Include="..\src\Shader.cpp" />
+    <ClCompile Include="..\src\GLShader.cpp" />
+    <ClCompile Include="..\src\GLTexture.cpp" />
     <ClCompile Include="..\src\Texture.cpp" />
+    <ClCompile Include="..\src\World.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
