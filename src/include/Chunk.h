@@ -34,7 +34,7 @@ public:
 	Chunk::Position chunkX, chunkZ;
 
 	Block::Type data[Chunk::sizeX + 2][Chunk::sizeY + 2][Chunk::sizeZ + 2];
-	bool needUpdate;
+	bool needBindBuffer, needUpdate;
 private:
 	GLuint vao, vbo, debugVao, debugVbo;
 	std::vector<Vertex> vertexBuffer;

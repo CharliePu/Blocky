@@ -2,11 +2,12 @@
 
 Chunk::Chunk(Chunk::PosVec position) :
 	chunkX(position.x), chunkZ(position.y),
-	needUpdate(false),
+	needBindBuffer(true), needUpdate(true),
 	vao(0), vbo(0),
 	debugVao(0), debugVbo(0),
 	data() {};
 
+//must be called under main thread
 Chunk::~Chunk()
 {
 	glDeleteVertexArrays(1, &vao);
@@ -23,7 +24,7 @@ void Chunk::generate(Block::GlobalPosition noiseX, Block::GlobalPosition noiseZ)
 		{
 			
 			for (Block::Position y = 0; 
-				y < (glm::simplex(glm::vec2((x + noiseX)/50.0,(z + noiseZ)/50.0)) + 1) * 20;
+				y < 50;// (glm::simplex(glm::vec2((x + noiseX)/50.0,(z + noiseZ)/50.0)) + 1) * 20;
 				++y)
 			{
 				data[x][y][z] = static_cast<Block::Type>(Block::Type::COBBLESTONE);
@@ -34,6 +35,8 @@ void Chunk::generate(Block::GlobalPosition noiseX, Block::GlobalPosition noiseZ)
 void Chunk::draw()
 {
 	if (this->needUpdate)
+		return;
+	if (this->needBindBuffer)
 	{
 		if (!this->vao)
 		{
@@ -56,7 +59,7 @@ void Chunk::draw()
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texCoord));
 		glBindVertexArray(NULL);
 
-		this->needUpdate = false;
+		this->needBindBuffer = false;
 	}
 	glBindVertexArray(this->vao);
 	//air is ignored
@@ -70,6 +73,10 @@ void Chunk::draw()
 
 void Chunk::update()
 {
+	if (!needUpdate)
+	{
+		return;
+	}
 	//Temporary vertex buffer
 	std::vector<Vertex> tempVertexBuffer[Block::typeNum]{};
 
@@ -90,7 +97,8 @@ void Chunk::update()
 		vertexBuffer.insert(vertexBuffer.end(), tempVertexBuffer[i].begin(), tempVertexBuffer[i].end());
 		verticesOffset[i] = static_cast<GLsizei>(vertexBuffer.size());
 	}
-	this->needUpdate = true;
+
+	needUpdate = false;
 }
 
 void Chunk::save()
@@ -105,6 +113,10 @@ void Chunk::save()
 				{
 					chunkFile.write((char*)&k, sizeof(Block::Type));
 				}
+	}
+	else
+	{
+		std::cerr << "Unable to open Saves\\chunk" + std::to_string(chunkX) + ", " + std::to_string(chunkZ) + ".dat";
 	}
 	chunkFile.close();
 }

@@ -32,9 +32,13 @@ int main()
 		updateModelMatrix(glm::vec3(0, 0, 0));
 
 		aWorld.drawDebug();
+
+		aWorld.unloadDistantChunks();
 	}
 
 	aWorld.disableUpdateThread();
+	aWorld.removeAll();
+
 	glfwTerminate();
 	return 0;
 }

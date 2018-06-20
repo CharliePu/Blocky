@@ -1,5 +1,6 @@
 #pragma once
 #include <list>
+#include <queue>
 #include <thread>
 #include <mutex>
 #include <unordered_map>
@@ -11,13 +12,17 @@
 class World
 {
 public:
-	static constexpr Chunk::Position renderSize = 10;
+	static constexpr Chunk::Position renderSize = 4;
 
 	World();
+
+	void removeAll();
 
 	//render chunks
 	void draw();
 	void drawDebug();
+
+	void unloadDistantChunks();
 
 	void enableUpdateThread();
 	void disableUpdateThread();
@@ -26,7 +31,7 @@ private:
 
 	std::list<Chunk*> *frontDrawBuffer;
 	std::list<Chunk*> *backDrawBuffer;
-	std::list<Chunk*> unloadBuffer;
+	std::queue<Chunk*> unloadBuffer;
 
 	struct KeyHasher
 	{
