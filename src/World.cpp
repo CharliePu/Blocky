@@ -5,7 +5,7 @@ extern GLCamera camera;
 
 //Must initialize after GL is set up.
 World::World() :
-	frontDrawBuffer(new std::list<Chunk*>), backDrawBuffer(new std::list<Chunk*>), unloadBuffer(),
+	frontDrawBuffer(), backDrawBuffer(), unloadBuffer(),
 	updateThread(&World::updateWorldLoop, this)
 {
 	static bool isTextureInited = false;
@@ -27,26 +27,20 @@ void World::removeAll()
 void World::draw()
 {
 	bufferLock.lock();
-	if (frontDrawBuffer)
-	{
-		for (auto i : *frontDrawBuffer)
+		for (auto i : frontDrawBuffer)
 		{
 			i->draw();
 		}
-	}
 	bufferLock.unlock();
 }
 
 void World::drawDebug()
 {
 	bufferLock.lock();
-	if (frontDrawBuffer)
-	{
-		for (auto i : *frontDrawBuffer)
+		for (auto i : frontDrawBuffer)
 		{
 			i->debug();
 		}
-	}
 	bufferLock.unlock();
 }
 
@@ -69,18 +63,19 @@ void World::enableUpdateThread()
 void World::disableUpdateThread()
 {
 	updateThreadShouldClose = true;
+	//Wait until thread finished
+	while (updateThreadShouldClose);
 }
 
 void World::updateWorldLoop()
 {
-
 	while (!updateThreadShouldClose)
 	{
 		//clear back draw buffer
-		backDrawBuffer->clear();
+		backDrawBuffer.clear();
 
 		//load chunks around current position within radius
-		Chunk::PosVec currentPosition(camera.position.x / Chunk::sizeX, camera.position.z / Chunk::sizeZ);
+		Chunk::PosVec currentPosition(std::floor(camera.position.x / Chunk::sizeX), std::floor(camera.position.z / Chunk::sizeZ));
 		for (Chunk::Position i = 0; i <= renderSize; i++)
 			for (Chunk::Position j = 0; j <= renderSize; j++)
 			{
@@ -93,12 +88,12 @@ void World::updateWorldLoop()
 		bufferLock.unlock();
 
 		//delete far chunk, update modified chunk
-		for (auto i = backDrawBuffer->cbegin(); i != backDrawBuffer->cend();)
+		for (auto i = backDrawBuffer.cbegin(); i != backDrawBuffer.cend();)
 		{
 			auto j = *i;
 			if ((abs((j)->chunkX - currentPosition.x) > renderSize / 2) || (abs((j)->chunkZ - currentPosition.y) > renderSize / 2))
 			{
-				i = backDrawBuffer->erase(i);
+				i = backDrawBuffer.erase(i);
 				unloadBuffer.push(j);
 			}
 			else
@@ -107,10 +102,9 @@ void World::updateWorldLoop()
 			}
 		}
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(50));
+		std::this_thread::sleep_for(std::chrono::milliseconds(0));
 	}
-	delete frontDrawBuffer;
-	delete backDrawBuffer;
+	updateThreadShouldClose = false;
 }
 
 void World::loadChunk(Chunk::PosVec position)
@@ -126,5 +120,5 @@ void World::loadChunk(Chunk::PosVec position)
 		chunkMap[position]->update();
 	}
 
-	backDrawBuffer->push_back(chunkMap[position]);
+	backDrawBuffer.push_back(chunkMap[position]);
 }

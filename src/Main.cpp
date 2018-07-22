@@ -78,12 +78,12 @@ void initEnv()
 
 	glfwSwapInterval(0);
 	//GL enable functions
-	glEnable(GL_MULTISAMPLE);
+//	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_DEPTH_TEST);
 //	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	//glEnable(GL_CULL_FACE);
-	//glCullFace(GL_BACK);
+//	glEnable(GL_CULL_FACE);
+//	glCullFace(GL_BACK);
 //	glDepthFunc(GL_LEQUAL);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 

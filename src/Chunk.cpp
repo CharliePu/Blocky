@@ -24,7 +24,7 @@ void Chunk::generate(Block::GlobalPosition noiseX, Block::GlobalPosition noiseZ)
 		{
 			
 			for (Block::Position y = 0; 
-				y < 50;// (glm::simplex(glm::vec2((x + noiseX)/50.0,(z + noiseZ)/50.0)) + 1) * 20;
+				y < (glm::simplex(glm::vec2((x + noiseX)/50.0,(z + noiseZ)/50.0)) + 1) * 20;
 				++y)
 			{
 				data[x][y][z] = static_cast<Block::Type>(Block::Type::COBBLESTONE);

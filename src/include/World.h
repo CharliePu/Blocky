@@ -29,8 +29,8 @@ public:
 
 private:
 
-	std::list<Chunk*> *frontDrawBuffer;
-	std::list<Chunk*> *backDrawBuffer;
+	std::list<Chunk*> frontDrawBuffer;
+	std::list<Chunk*> backDrawBuffer;
 	std::queue<Chunk*> unloadBuffer;
 
 	struct KeyHasher
