@@ -2,7 +2,7 @@
 GLFWwindow* window;
 int windowWidth, windowHeight;
 World aWorld;
-GLCamera camera;
+Camera camera;
 
 int main()
 {
@@ -12,6 +12,9 @@ int main()
 	
 
 	aWorld.enableUpdateThread();
+
+	//Wait for first rendering
+	while (!aWorld.renderFinished);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -31,8 +34,9 @@ int main()
 		updateViewMatrix(camera.position, camera.getViewMatrix());
 		updateModelMatrix(glm::vec3(0, 0, 0));
 
-		aWorld.drawDebug();
+//		aWorld.drawDebug();
 
+		aWorld.updateCurrentChunkPosition();
 		aWorld.unloadDistantChunks();
 	}
 
@@ -85,7 +89,7 @@ void initEnv()
 //	glEnable(GL_CULL_FACE);
 //	glCullFace(GL_BACK);
 //	glDepthFunc(GL_LEQUAL);
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(0.5f, 0.8f, 1.0f, 0.0f);
 
 	//init textures
 	Texture::init("..\\src\\resource\\");

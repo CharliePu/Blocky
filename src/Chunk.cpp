@@ -5,6 +5,7 @@ Chunk::Chunk(Chunk::PosVec position) :
 	needBindBuffer(true), needUpdate(true),
 	vao(0), vbo(0),
 	debugVao(0), debugVbo(0),
+	vertexBuffer(), verticesOffset(),
 	data() {};
 
 //must be called under main thread
@@ -19,16 +20,17 @@ Chunk::~Chunk()
 void Chunk::generate(Block::GlobalPosition noiseX, Block::GlobalPosition noiseZ)
 {
 	//(perlinNoise2D((noiseX + x - 1) / 20.0, (noiseZ + z - 1) / 20.0) + 1) * 50
-	for (Block::Position x = 0; x !=  Chunk::sizeX + 2; ++x)
+	for (Block::Position x = 0; x != Chunk::sizeX + 2; ++x)
 		for (Block::Position z = 0; z != Chunk::sizeZ + 2; ++z)
 		{
-			
-			for (Block::Position y = 0; 
-				y < (glm::simplex(glm::vec2((x + noiseX)/50.0,(z + noiseZ)/50.0)) + 1) * 20;
+			int h = (glm::simplex(glm::vec2((x + noiseX) / 50.0, (z + noiseZ) / 50.0)) + 1) * 20;
+			for (Block::Position y = 0;
+				y < h;
 				++y)
 			{
-				data[x][y][z] = static_cast<Block::Type>(Block::Type::COBBLESTONE);
+				data[x][y][z] = Block::Type::DIRT;
 			}
+			data[x][h][z] = Block::Type::GRASS;
 		}
 }
 
@@ -92,10 +94,10 @@ void Chunk::update()
 				}
 
 	//combine vertices, ignore air
- 	for (auto i = decltype(Block::typeNum)(1); i != Block::typeNum; ++i)
+	for (auto i = decltype(Block::typeNum)(1); i != Block::typeNum; ++i)
 	{
 		vertexBuffer.insert(vertexBuffer.end(), tempVertexBuffer[i].begin(), tempVertexBuffer[i].end());
-		verticesOffset[i] = static_cast<GLsizei>(vertexBuffer.size());
+		verticesOffset[i + 1] = static_cast<GLsizei>(vertexBuffer.size());
 	}
 
 	needUpdate = false;
@@ -111,7 +113,15 @@ void Chunk::save()
 			for (const auto &j : i)
 				for (const auto &k : j)
 				{
-					chunkFile.write((char*)&k, sizeof(Block::Type));
+					try
+					{
+						chunkFile.write((char*)&k, sizeof(Block::Type));
+					}
+					catch (const std::exception &e)
+					{
+						std::cerr << "Failed to write chunk" << chunkX << ", " << chunkZ << ": " << e.what() << std::endl;
+						break;
+					}
 				}
 	}
 	else
@@ -134,7 +144,18 @@ bool Chunk::load()
 	for (auto &i : this->data)
 		for (auto &j : i)
 			for (auto &k : j)
-				chunkFile.read((char*)&k, sizeof(Block::Type));
+			{
+				try
+				{
+					chunkFile.read((char*)&k, sizeof(Block::Type));
+				}
+				catch (const std::exception &e)
+				{
+					std::cerr << "Failed to read chunk" << chunkX << ", " << chunkZ << ": " << e.what() << std::endl;
+					chunkFile.close();
+					return false;
+				}
+			}
 
 	chunkFile.close();
 	return true;
@@ -216,7 +237,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		{
 
 			temp.texCoord = Block::vertexTexCoords[i];
-			temp.position = Block::vertexPositions[Block::vertexIndices[0][i]] + glm::vec3(x + chunkX*Chunk::sizeX, y, z + chunkZ*Chunk::sizeZ) + glm::vec3(-1);
+			temp.position = Block::vertexPositions[Block::vertexIndices[0][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
 			verticesGroups.push_back(temp);
 		}
 	}
@@ -226,7 +247,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		temp.normal = Block::vertexNormals[1];
 		for (auto i = 0; i < 6; i++)
 		{
-			temp.position = Block::vertexPositions[Block::vertexIndices[1][i]] + glm::vec3(x + chunkX*Chunk::sizeX, y, z + chunkZ*Chunk::sizeZ) + glm::vec3(-1);
+			temp.position = Block::vertexPositions[Block::vertexIndices[1][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
 			temp.texCoord = Block::vertexTexCoords[i];
 			verticesGroups.push_back(temp);
 		}
@@ -237,7 +258,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		temp.normal = Block::vertexNormals[2];
 		for (auto i = 0; i < 6; i++)
 		{
-			temp.position = Block::vertexPositions[Block::vertexIndices[2][i]] + glm::vec3(x + chunkX*Chunk::sizeX, y, z + chunkZ*Chunk::sizeZ) + glm::vec3(-1);
+			temp.position = Block::vertexPositions[Block::vertexIndices[2][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
 			temp.texCoord = Block::vertexTexCoords[i];
 			verticesGroups.push_back(temp);
 		}
@@ -248,7 +269,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		temp.normal = Block::vertexNormals[3];
 		for (auto i = 0; i < 6; i++)
 		{
-			temp.position = Block::vertexPositions[Block::vertexIndices[3][i]] + glm::vec3(x + chunkX*Chunk::sizeX, y, z + chunkZ*Chunk::sizeZ) + glm::vec3(-1);
+			temp.position = Block::vertexPositions[Block::vertexIndices[3][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
 			temp.texCoord = Block::vertexTexCoords[i];
 			verticesGroups.push_back(temp);
 		}
@@ -259,7 +280,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		temp.normal = Block::vertexNormals[4];
 		for (auto i = 0; i < 6; i++)
 		{
-			temp.position = Block::vertexPositions[Block::vertexIndices[4][i]] + glm::vec3(x + chunkX*Chunk::sizeX, y, z + chunkZ*Chunk::sizeZ) + glm::vec3(-1);
+			temp.position = Block::vertexPositions[Block::vertexIndices[4][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
 			temp.texCoord = Block::vertexTexCoords[i];
 			verticesGroups.push_back(temp);
 		}
@@ -270,7 +291,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		temp.normal = Block::vertexNormals[5];
 		for (auto i = 0; i < 6; i++)
 		{
-			temp.position = Block::vertexPositions[Block::vertexIndices[5][i]] + glm::vec3(x + chunkX*Chunk::sizeX, y, z + chunkZ*Chunk::sizeZ) + glm::vec3(-1);
+			temp.position = Block::vertexPositions[Block::vertexIndices[5][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
 			temp.texCoord = Block::vertexTexCoords[i];
 			verticesGroups.push_back(temp);
 		}

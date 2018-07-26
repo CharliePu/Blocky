@@ -1,12 +1,14 @@
 #include "World.h"
 
 //Must delete afterward: create Camera.cpp
-extern GLCamera camera;
+extern Camera camera;
 
 //Must initialize after GL is set up.
 World::World() :
+	renderFinished(false),
 	frontDrawBuffer(), backDrawBuffer(), unloadBuffer(),
-	updateThread(&World::updateWorldLoop, this)
+	updateThread(&World::updateWorldLoop, this),
+	chunkMap(), currentChunkPosition()
 {
 	static bool isTextureInited = false;
 	if (!isTextureInited)
@@ -27,29 +29,37 @@ void World::removeAll()
 void World::draw()
 {
 	bufferLock.lock();
-		for (auto i : frontDrawBuffer)
-		{
-			i->draw();
-		}
+	for (auto i : frontDrawBuffer)
+	{
+		i->draw();
+	}
 	bufferLock.unlock();
 }
 
 void World::drawDebug()
 {
 	bufferLock.lock();
-		for (auto i : frontDrawBuffer)
-		{
-			i->debug();
-		}
+	for (auto i : frontDrawBuffer)
+	{
+		i->debug();
+	}
 	bufferLock.unlock();
+}
+
+void World::updateCurrentChunkPosition()
+{
+	currentChunkPosition = glm::ivec2(std::floor(camera.position.x / Chunk::sizeX), std::floor(camera.position.z / Chunk::sizeZ));
 }
 
 void World::unloadDistantChunks()
 {
 	if (!unloadBuffer.empty())
 	{
-		chunkMap.erase(Chunk::PosVec(unloadBuffer.front()->chunkX, unloadBuffer.front()->chunkZ));
-		delete unloadBuffer.front();
+		if (chunkOutsideRenderZone(*unloadBuffer.front()))
+		{
+			chunkMap.erase(Chunk::PosVec(unloadBuffer.front()->chunkX, unloadBuffer.front()->chunkZ));
+			delete unloadBuffer.front();
+		}
 		unloadBuffer.pop();
 	}
 }
@@ -74,12 +84,13 @@ void World::updateWorldLoop()
 		//clear back draw buffer
 		backDrawBuffer.clear();
 
+		auto centerChunkPosition = this->currentChunkPosition;
+
 		//load chunks around current position within radius
-		Chunk::PosVec currentPosition(std::floor(camera.position.x / Chunk::sizeX), std::floor(camera.position.z / Chunk::sizeZ));
-		for (Chunk::Position i = 0; i <= renderSize; i++)
-			for (Chunk::Position j = 0; j <= renderSize; j++)
+		for (Chunk::Position i = -renderSize; i <= renderSize; i++)
+			for (Chunk::Position j = -renderSize; j <= renderSize; j++)
 			{
-				loadChunk(Chunk::PosVec(currentPosition) - renderSize / 2 + Chunk::PosVec(i, j));
+				loadChunk(centerChunkPosition + Chunk::PosVec(i, j));
 			}
 
 		//swap two buffer of chunks
@@ -91,7 +102,7 @@ void World::updateWorldLoop()
 		for (auto i = backDrawBuffer.cbegin(); i != backDrawBuffer.cend();)
 		{
 			auto j = *i;
-			if ((abs((j)->chunkX - currentPosition.x) > renderSize / 2) || (abs((j)->chunkZ - currentPosition.y) > renderSize / 2))
+			if (chunkOutsideRenderZone(*j, centerChunkPosition))
 			{
 				i = backDrawBuffer.erase(i);
 				unloadBuffer.push(j);
@@ -102,7 +113,12 @@ void World::updateWorldLoop()
 			}
 		}
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(0));
+		//mark the first rendering
+		if (!renderFinished)
+		{
+			renderFinished = true;
+		}
+		//		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	updateThreadShouldClose = false;
 }
@@ -111,13 +127,24 @@ void World::loadChunk(Chunk::PosVec position)
 {
 	if (chunkMap.find(position) == chunkMap.end())
 	{
-		chunkMap[position] = new Chunk(position);
+		try
+		{
+			chunkMap.insert({ position, new Chunk(position) });
+		}
+		catch (const std::exception &e)
+		{
+			std::cerr << "Failed to create chunk" << position.x << ", " << position.y << " : " << e.what();
+		}
 
 		if (!chunkMap[position]->load())
 		{
 			chunkMap[position]->generate(position.x*Chunk::sizeX, position.y*Chunk::sizeZ);
 		}
 		chunkMap[position]->update();
+	}
+	else
+	{
+		//std::cerr << "passed " << position.x << "," << position.y << std::endl;
 	}
 
 	backDrawBuffer.push_back(chunkMap[position]);

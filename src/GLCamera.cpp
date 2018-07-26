@@ -8,6 +8,7 @@ GLCamera::GLCamera(
 	speed(speed), cursorSensitivity(cursorSensitivity)
 {}
 
+
 void GLCamera::updateKeyCallback(GLFWwindow * window)
 {
 	static float lastTime, currentTime;

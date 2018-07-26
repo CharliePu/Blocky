@@ -57,6 +57,9 @@
     <ClInclude Include="..\src\include\Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Debug.cpp">
@@ -95,5 +98,14 @@
     <ClCompile Include="..\src\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\shaders\block.fsh" />
+    <None Include="..\src\shaders\debug.fsh" />
+    <None Include="..\src\shaders\block.vsh" />
+    <None Include="..\src\shaders\debug.vsh" />
   </ItemGroup>
 </Project>

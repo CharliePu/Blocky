@@ -7,8 +7,8 @@
 
 #include "GLTexture.h"
 #include "GLShader.h"
-#include "GLCamera.h"
 
+#include "Camera.h"
 #include "World.h"
 #include "Debug.h"
 
