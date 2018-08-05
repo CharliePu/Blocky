@@ -1,4 +1,5 @@
 #include "Chunk.h"
+#include "include/Noise.h"
 
 Chunk::Chunk(Chunk::PosVec position) :
 	chunkX(position.x), chunkZ(position.y),
@@ -11,6 +12,7 @@ Chunk::Chunk(Chunk::PosVec position) :
 //must be called under main thread
 Chunk::~Chunk()
 {
+	//save();
 	glDeleteVertexArrays(1, &vao);
 	glDeleteVertexArrays(1, &debugVao);
 	glDeleteBuffers(1, &vbo);
@@ -23,7 +25,8 @@ void Chunk::generate(Block::GlobalPosition noiseX, Block::GlobalPosition noiseZ)
 	for (Block::Position x = 0; x != Chunk::sizeX + 2; ++x)
 		for (Block::Position z = 0; z != Chunk::sizeZ + 2; ++z)
 		{
-			int h = (glm::simplex(glm::vec2((x + noiseX) / 50.0, (z + noiseZ) / 50.0)) + 1) * 20;
+			int h = (perlinNoise2D((noiseX + x) / 500.0f, (noiseZ + z) / 500.0f) + 1) * 200;
+				//(glm::simplex(glm::vec2((x + noiseX) / 500.0, (z + noiseZ) / 500.0)) + 1) * 20;
 			for (Block::Position y = 0;
 				y < h;
 				++y)
@@ -167,41 +170,41 @@ void Chunk::debug()
 	{
 		GLfloat debugFramework[] =
 		{
-			(this->chunkX + 1) * Chunk::sizeX - 0.5f,-0.5f			,this->chunkZ * Chunk::sizeZ - 0.5f		,1,1,1,
-			(this->chunkX + 1) * Chunk::sizeX - 0.5f,Chunk::sizeY - 0.5f	,this->chunkZ * Chunk::sizeZ - 0.5f		,1,1,1,
+			(this->chunkX + 1) * Chunk::sizeX,0.0f			,this->chunkZ * Chunk::sizeZ		,1,1,1,
+			(this->chunkX + 1) * Chunk::sizeX,Chunk::sizeY	,this->chunkZ * Chunk::sizeZ		,1,1,1,
 
-			this->chunkX * Chunk::sizeX - 0.5f,-0.5f			,(this->chunkZ + 1) * Chunk::sizeZ - 0.5f,1,1,1,
-			this->chunkX * Chunk::sizeX - 0.5f,Chunk::sizeY - 0.5f	,(this->chunkZ + 1) * Chunk::sizeZ - 0.5f,1,1,1,
+			this->chunkX * Chunk::sizeX,0.0f			,(this->chunkZ + 1) * Chunk::sizeZ,1,1,1,
+			this->chunkX * Chunk::sizeX,Chunk::sizeY	,(this->chunkZ + 1) * Chunk::sizeZ,1,1,1,
 
-			(this->chunkX + 1) * Chunk::sizeX - 0.5f,-0.5f			,(this->chunkZ + 1) * Chunk::sizeZ - 0.5f,1,1,1,
-			(this->chunkX + 1) * Chunk::sizeX - 0.5f,Chunk::sizeY - 0.5f	,(this->chunkZ + 1) * Chunk::sizeZ - 0.5f,1,1,1,
+			(this->chunkX + 1) * Chunk::sizeX,0.0f			,(this->chunkZ + 1) * Chunk::sizeZ,1,1,1,
+			(this->chunkX + 1) * Chunk::sizeX,Chunk::sizeY	,(this->chunkZ + 1) * Chunk::sizeZ,1,1,1,
 
-			this->chunkX * Chunk::sizeX - 0.5f,-0.5f			,this->chunkZ * Chunk::sizeZ - 0.5f		,1,1,1,
-			this->chunkX * Chunk::sizeX - 0.5f,Chunk::sizeY - 0.5f	,this->chunkZ * Chunk::sizeZ - 0.5f		,1,1,1,
+			this->chunkX * Chunk::sizeX,0.0f			,this->chunkZ * Chunk::sizeZ		,1,1,1,
+			this->chunkX * Chunk::sizeX,Chunk::sizeY	,this->chunkZ * Chunk::sizeZ		,1,1,1,
 
-			this->chunkX * Chunk::sizeX - 0.5f,-0.5f			,this->chunkZ * Chunk::sizeZ - 0.5f		,1,1,1,
-			(this->chunkX + 1) * Chunk::sizeX - 0.5f,-0.5f			,this->chunkZ * Chunk::sizeZ - 0.5f		,1,1,1,
+			this->chunkX * Chunk::sizeX,0.0f			,this->chunkZ * Chunk::sizeZ		,1,1,1,
+			(this->chunkX + 1) * Chunk::sizeX,0.0f			,this->chunkZ * Chunk::sizeZ		,1,1,1,
 
-			this->chunkX * Chunk::sizeX - 0.5f,-0.5f			,(this->chunkZ + 1) * Chunk::sizeZ - 0.5f,1,1,1,
-			(this->chunkX + 1) * Chunk::sizeX - 0.5f,-0.5f			,(this->chunkZ + 1) * Chunk::sizeZ - 0.5f,1,1,1,
+			this->chunkX * Chunk::sizeX,0.0f			,(this->chunkZ + 1) * Chunk::sizeZ,1,1,1,
+			(this->chunkX + 1) * Chunk::sizeX,0.0f			,(this->chunkZ + 1) * Chunk::sizeZ,1,1,1,
 
-			this->chunkX * Chunk::sizeX - 0.5f,-0.5f			,this->chunkZ * Chunk::sizeZ - 0.5f		,1,1,1,
-			this->chunkX * Chunk::sizeX - 0.5f,-0.5f			,(this->chunkZ + 1) * Chunk::sizeZ - 0.5f,1,1,1,
+			this->chunkX * Chunk::sizeX,0.0f			,this->chunkZ * Chunk::sizeZ		,1,1,1,
+			this->chunkX * Chunk::sizeX,0.0f			,(this->chunkZ + 1) * Chunk::sizeZ,1,1,1,
 
-			(this->chunkX + 1) * Chunk::sizeX - 0.5f,-0.5f		,this->chunkZ * Chunk::sizeZ - 0.5f		,1,1,1,
-			(this->chunkX + 1) * Chunk::sizeX - 0.5f,-0.5f			,(this->chunkZ + 1) * Chunk::sizeZ - 0.5f,1,1,1,
+			(this->chunkX + 1) * Chunk::sizeX,0.0f		,this->chunkZ * Chunk::sizeZ		,1,1,1,
+			(this->chunkX + 1) * Chunk::sizeX,0.0f			,(this->chunkZ + 1) * Chunk::sizeZ,1,1,1,
 
-			this->chunkX * Chunk::sizeX - 0.5f,Chunk::sizeY - 0.5f	,this->chunkZ * Chunk::sizeZ - 0.5f		,1,1,1,
-			(this->chunkX + 1) * Chunk::sizeX - 0.5f,Chunk::sizeY - 0.5f	,this->chunkZ * Chunk::sizeZ - 0.5f		,1,1,1,
+			this->chunkX * Chunk::sizeX,Chunk::sizeY	,this->chunkZ * Chunk::sizeZ		,1,1,1,
+			(this->chunkX + 1) * Chunk::sizeX,Chunk::sizeY	,this->chunkZ * Chunk::sizeZ		,1,1,1,
 
-			this->chunkX * Chunk::sizeX - 0.5f,Chunk::sizeY - 0.5f	,(this->chunkZ + 1) * Chunk::sizeZ - 0.5f,1,1,1,
-			(this->chunkX + 1) * Chunk::sizeX - 0.5f,Chunk::sizeY - 0.5f	,(this->chunkZ + 1) * Chunk::sizeZ - 0.5f,1,1,1,
+			this->chunkX * Chunk::sizeX,Chunk::sizeY	,(this->chunkZ + 1) * Chunk::sizeZ,1,1,1,
+			(this->chunkX + 1) * Chunk::sizeX,Chunk::sizeY	,(this->chunkZ + 1) * Chunk::sizeZ,1,1,1,
 
-			this->chunkX * Chunk::sizeX - 0.5f,Chunk::sizeY - 0.5f	,this->chunkZ * Chunk::sizeZ - 0.5f		,1,1,1,
-			this->chunkX * Chunk::sizeX - 0.5f,Chunk::sizeY - 0.5f	,(this->chunkZ + 1) * Chunk::sizeZ - 0.5f,1,1,1,
+			this->chunkX * Chunk::sizeX,Chunk::sizeY	,this->chunkZ * Chunk::sizeZ		,1,1,1,
+			this->chunkX * Chunk::sizeX,Chunk::sizeY	,(this->chunkZ + 1) * Chunk::sizeZ,1,1,1,
 
-			(this->chunkX + 1) * Chunk::sizeX - 0.5f,Chunk::sizeY - 0.5f	,this->chunkZ * Chunk::sizeZ - 0.5f		,1,1,1,
-			(this->chunkX + 1) * Chunk::sizeX - 0.5f,Chunk::sizeY - 0.5f	,(this->chunkZ + 1) * Chunk::sizeZ - 0.5f,1,1,1
+			(this->chunkX + 1) * Chunk::sizeX,Chunk::sizeY	,this->chunkZ * Chunk::sizeZ		,1,1,1,
+			(this->chunkX + 1) * Chunk::sizeX,Chunk::sizeY	,(this->chunkZ + 1) * Chunk::sizeZ,1,1,1
 		};
 		glGenVertexArrays(1, &this->debugVao);
 		glGenBuffers(1, &this->debugVbo);

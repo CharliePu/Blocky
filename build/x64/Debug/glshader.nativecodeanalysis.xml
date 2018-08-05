@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\include\glm\detail\</FILEPATH>
+      <FILENAME>type_half.inl</FILENAME>
+      <LINE>51</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function may not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>glm::detail::uif32::{ctor}</FUNCTION>
+    <DECORATED>??0uif32@detail@glm@@QEAA@XZ</DECORATED>
+    <FUNCLINE>51</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\src\</FILEPATH>
+      <FILENAME>glshader.cpp</FILENAME>
+      <LINE>77</LINE>
+      <COLUMN>54</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>GLShader::compileShader</FUNCTION>
+    <DECORATED>?compileShader@GLShader@@AEAAXAEBIAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@1@Z</DECORATED>
+    <FUNCLINE>66</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\include\glm\detail\</FILEPATH>
+      <FILENAME>type_mat4x4.inl</FILENAME>
+      <LINE>99</LINE>
+      <COLUMN>36</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function may not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>glm::tmat4x4&lt;float,0&gt;::{ctor}</FUNCTION>
+    <DECORATED>??0?$tmat4x4@M$0A@@glm@@QEAA@XZ</DECORATED>
+    <FUNCLINE>99</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\include\glm\detail\</FILEPATH>
+      <FILENAME>type_vec4.inl</FILENAME>
+      <LINE>39</LINE>
+      <COLUMN>34</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function may not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>glm::tvec4&lt;float,0&gt;::{ctor}</FUNCTION>
+    <DECORATED>??0?$tvec4@M$0A@@glm@@QEAA@XZ</DECORATED>
+    <FUNCLINE>39</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\include\glm\detail\</FILEPATH>
+      <FILENAME>type_vec4.inl</FILENAME>
+      <LINE>39</LINE>
+      <COLUMN>34</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function may not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>glm::tvec4&lt;double,0&gt;::{ctor}</FUNCTION>
+    <DECORATED>??0?$tvec4@N$0A@@glm@@QEAA@XZ</DECORATED>
+    <FUNCLINE>39</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

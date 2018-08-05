@@ -1,5 +1,4 @@
 #pragma once
-#include <list>
 #include <queue>
 #include <thread>
 #include <mutex>
@@ -7,13 +6,13 @@
 #include <unordered_map>
 
 #include "Chunk.h"
-#include "Camera.h"
+#include "Player.h"
 #include "GLTexture.h"
 
 class World
 {
 public:
-	static constexpr Chunk::Position renderSize = 11;
+	static constexpr Chunk::Position renderSize = 6;
 
 	World();
 
@@ -26,17 +25,21 @@ public:
 	void updateCurrentChunkPosition();
 	void unloadDistantChunks();
 
-	Chunk &getCurrentChunk();
-
 	void enableUpdateThread();
 	void disableUpdateThread();
 
-	std::atomic_bool renderFinished;
+	//Utility functions
+	Chunk * const getCurrentChunk();	
+	void loadChunk(Chunk::PosVec position);
+	bool chunkOutsideRenderZone(const Chunk &chunk, const Chunk::PosVec &centerChunkPosition, const int &renderSize);
+	Block::Type getBlock(const Block::GlobalPosition &x, const Block::GlobalPosition &y, const Block::GlobalPosition &z);
+
 private:
 
-	std::list<Chunk*> frontDrawBuffer;
-	std::list<Chunk*> backDrawBuffer;
-	std::queue<Chunk*> unloadBuffer;
+	std::vector<Chunk*> frontDrawBuffer, backDrawBuffer;
+	std::list<Chunk*> unloadBuffer;
+
+	std::mutex frontBufferLock, unloadBufferLock, chunkMapLock;
 
 	struct KeyHasher
 	{
@@ -47,31 +50,19 @@ private:
 	};
 
 	std::unordered_map <Chunk::PosVec, Chunk*, KeyHasher> chunkMap;
-	std::mutex bufferLock;
 
+	//chunk position is always up-to-date
 	Chunk::PosVec currentChunkPosition;
+	//chunk pointer need to be checked everytime
+	Chunk * currentChunk;
 
+	//Update thread
 	std::thread updateThread;
 	std::atomic_bool updateThreadShouldClose;
-
 	void updateWorldLoop();
-	void loadChunk(Chunk::PosVec position);
-
-	bool chunkOutsideRenderZone(const Chunk &chunk, const Chunk::PosVec &centerChunkPosition);
-	bool chunkOutsideRenderZone(const Chunk &chunk);
 };
 
-inline Chunk & World::getCurrentChunk()
-{
-	return *chunkMap[currentChunkPosition];
-}
-
-inline bool World::chunkOutsideRenderZone(const Chunk& chunk)
-{
-	return (abs(chunk.chunkX - currentChunkPosition.x) > renderSize) || (abs(chunk.chunkZ - currentChunkPosition.y) > renderSize);
-}
-
-inline bool World::chunkOutsideRenderZone(const Chunk& chunk, const Chunk::PosVec &centerChunkPosition)
+inline bool World::chunkOutsideRenderZone(const Chunk& chunk, const Chunk::PosVec &centerChunkPosition, const int &renderSize)
 {
 	return (abs(chunk.chunkX - centerChunkPosition.x) > renderSize) || (abs(chunk.chunkZ - centerChunkPosition.y) > renderSize);
 }

@@ -2,15 +2,28 @@
 
 const glm::fvec3 Block::vertexPositions[]
 {
-	glm::vec3(-0.5, 0.5, 0.5),
-	glm::vec3(-0.5, -0.5, 0.5),
-	glm::vec3(0.5, -0.5, 0.5),
-	glm::vec3(0.5, 0.5, 0.5),
-	glm::vec3(-0.5, 0.5, -0.5),
-	glm::vec3(-0.5, -0.5, -0.5),
-	glm::vec3(0.5, -0.5, -0.5),
-	glm::vec3(0.5, 0.5, -0.5)
+	glm::fvec3(0.0f, 1.0f, 1.0f),
+	glm::fvec3(0.0f, 0.0f, 1.0f),
+	glm::fvec3(1.0f, 0.0f, 1.0f),
+	glm::fvec3(1.0f, 1.0f, 1.0f),
+	glm::fvec3(0.0f, 1.0f, 0.0f),
+	glm::fvec3(0.0f, 0.0f, 0.0f),
+	glm::fvec3(1.0f, 0.0f, 0.0f),
+	glm::fvec3(1.0f, 1.0f, 0.0f)
 };
+
+//const glm::fvec3 Block::vertexPositions[]
+//{
+//	glm::fvec3(-0.5, 0.5, 0.5),
+//	glm::fvec3(-0.5, -0.5, 0.5),
+//	glm::fvec3(0.5, -0.5, 0.5),
+//	glm::fvec3(0.5, 0.5, 0.5),
+//	glm::fvec3(-0.5, 0.5, -0.5),
+//	glm::fvec3(-0.5, -0.5, -0.5),
+//	glm::fvec3(0.5, -0.5, -0.5),
+//	glm::fvec3(0.5, 0.5, -0.5)
+//};
+
 
 const unsigned short Block::vertexIndices[6][6]
 {

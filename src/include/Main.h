@@ -8,7 +8,7 @@
 #include "GLTexture.h"
 #include "GLShader.h"
 
-#include "Camera.h"
+#include "Player.h"
 #include "World.h"
 #include "Debug.h"
 

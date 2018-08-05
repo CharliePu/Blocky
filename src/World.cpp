@@ -1,14 +1,15 @@
 #include "World.h"
 
 //Must delete afterward: create Camera.cpp
-extern Camera camera;
+extern Player camera;
+
 
 //Must initialize after GL is set up.
 World::World() :
-	renderFinished(false),
 	frontDrawBuffer(), backDrawBuffer(), unloadBuffer(),
+	frontBufferLock(), unloadBufferLock(), chunkMapLock(), 
 	updateThread(&World::updateWorldLoop, this),
-	chunkMap(), currentChunkPosition()
+	chunkMap(), currentChunkPosition(), currentChunk()
 {
 	static bool isTextureInited = false;
 	if (!isTextureInited)
@@ -28,40 +29,39 @@ void World::removeAll()
 
 void World::draw()
 {
-	bufferLock.lock();
+	frontBufferLock.lock();
 	for (auto i : frontDrawBuffer)
 	{
 		i->draw();
 	}
-	bufferLock.unlock();
+	frontBufferLock.unlock();
 }
 
 void World::drawDebug()
 {
-	bufferLock.lock();
+	frontBufferLock.lock();
 	for (auto i : frontDrawBuffer)
 	{
 		i->debug();
 	}
-	bufferLock.unlock();
+	frontBufferLock.unlock();
 }
 
 void World::updateCurrentChunkPosition()
 {
-	currentChunkPosition = glm::ivec2(std::floor(camera.position.x / Chunk::sizeX), std::floor(camera.position.z / Chunk::sizeZ));
+	currentChunkPosition = glm::ivec2(std::floor((camera.getPosition().x) / Chunk::sizeX), std::floor((camera.getPosition().z) / Chunk::sizeZ));
 }
 
 void World::unloadDistantChunks()
 {
-	if (!unloadBuffer.empty())
+	//Delete a chunk per frame
+	unloadBufferLock.lock();
+	while (!unloadBuffer.empty())
 	{
-		if (chunkOutsideRenderZone(*unloadBuffer.front()))
-		{
-			chunkMap.erase(Chunk::PosVec(unloadBuffer.front()->chunkX, unloadBuffer.front()->chunkZ));
-			delete unloadBuffer.front();
-		}
-		unloadBuffer.pop();
+		delete unloadBuffer.front();
+		unloadBuffer.pop_front();
 	}
+	unloadBufferLock.unlock();
 }
 
 void World::enableUpdateThread()
@@ -81,43 +81,41 @@ void World::updateWorldLoop()
 {
 	while (!updateThreadShouldClose)
 	{
+		Chunk::PosVec centerChunkPosition = currentChunkPosition;
+
 		//clear back draw buffer
 		backDrawBuffer.clear();
 
-		auto centerChunkPosition = this->currentChunkPosition;
-
 		//load chunks around current position within radius
-		for (Chunk::Position i = -renderSize; i <= renderSize; i++)
-			for (Chunk::Position j = -renderSize; j <= renderSize; j++)
+		for (auto i = -renderSize; i <= renderSize; i++)
+			for (auto j = -renderSize; j <= renderSize; j++)
 			{
 				loadChunk(centerChunkPosition + Chunk::PosVec(i, j));
 			}
 
 		//swap two buffer of chunks
-		bufferLock.lock();
-		std::swap(frontDrawBuffer, backDrawBuffer);
-		bufferLock.unlock();
+		frontBufferLock.lock();
+		frontDrawBuffer.swap(backDrawBuffer);
+		frontBufferLock.unlock();
 
-		//delete far chunk, update modified chunk
-		for (auto i = backDrawBuffer.cbegin(); i != backDrawBuffer.cend();)
+		unloadBufferLock.lock();
+		//put far chunks into unload buffer
+		for (auto i : backDrawBuffer)
 		{
-			auto j = *i;
-			if (chunkOutsideRenderZone(*j, centerChunkPosition))
+			if (chunkOutsideRenderZone(*i, centerChunkPosition, renderSize))
 			{
-				i = backDrawBuffer.erase(i);
-				unloadBuffer.push(j);
-			}
-			else
-			{
-				++i;
+				unloadBuffer.push_back(i);
+				//erase from chunkMap so renderer has no way to access it again before it is deleted
+				chunkMap.erase(Chunk::PosVec(i->chunkX, i->chunkZ));
+				//reset to nullptr if currentChunk is going to be deleted
+				if (i == currentChunk)
+				{
+					currentChunk = nullptr;
+				}
 			}
 		}
+		unloadBufferLock.unlock();
 
-		//mark the first rendering
-		if (!renderFinished)
-		{
-			renderFinished = true;
-		}
 		//		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 	updateThreadShouldClose = false;
@@ -125,27 +123,84 @@ void World::updateWorldLoop()
 
 void World::loadChunk(Chunk::PosVec position)
 {
-	if (chunkMap.find(position) == chunkMap.end())
+	Chunk *chunk;
+	if (chunkMap.find(position) == chunkMap.cend())
 	{
+		//allocate new Chunk
 		try
 		{
-			chunkMap.insert({ position, new Chunk(position) });
+			chunk = new Chunk(position);
 		}
-		catch (const std::exception &e)
+		catch (std::exception e)
 		{
-			std::cerr << "Failed to create chunk" << position.x << ", " << position.y << " : " << e.what();
+			std::cerr << e.what() << std::endl;
 		}
 
-		if (!chunkMap[position]->load())
+		//prevent reading in other threads while STL container is being written
+		chunkMapLock.lock();
+		chunkMap.insert({ position, chunk });
+		chunkMapLock.unlock();
+
+		if (!chunk->load())
 		{
-			chunkMap[position]->generate(position.x*Chunk::sizeX, position.y*Chunk::sizeZ);
+			chunk->generate(position.x*Chunk::sizeX, position.y*Chunk::sizeZ);
 		}
-		chunkMap[position]->update();
+		chunk->update();
 	}
 	else
 	{
-		//std::cerr << "passed " << position.x << "," << position.y << std::endl;
+		chunk = chunkMap[position];
 	}
+	backDrawBuffer.push_back(chunk);
+}
 
-	backDrawBuffer.push_back(chunkMap[position]);
+Chunk * const World::getCurrentChunk()
+{
+	//if currentchunk exists and equals to chunk position, use old value
+	if (currentChunk)
+		if (currentChunk->chunkX == currentChunkPosition.x && currentChunk->chunkZ == currentChunkPosition.y)
+			return currentChunk;
+
+	//Find chunk in chunkmap, if no found, use old value
+	if (chunkMapLock.try_lock())
+	{
+		auto findCurrentChunk = chunkMap.find(currentChunkPosition);
+		currentChunk = findCurrentChunk == chunkMap.cend() ? currentChunk : (*findCurrentChunk).second;
+		chunkMapLock.unlock();
+	}
+	return currentChunk;
+}
+
+
+Block::Type World::getBlock(const Block::GlobalPosition & x, const Block::GlobalPosition & y, const Block::GlobalPosition & z)
+{
+	//If y outside chunk boundry, return air
+	if (y < 0 || y >= Chunk::sizeY) return Block::AIR;
+	
+	//Convert position into local position
+	auto lx = x % Chunk::sizeX;
+	if (lx < 0) lx += Chunk::sizeX;
+	auto ly = y;
+	auto lz = z % Chunk::sizeZ;
+	if (lz < 0) lz += Chunk::sizeZ;
+
+	//Find target chunk
+	chunkMapLock.lock();
+	auto chunkMapFind = chunkMap.find(
+		Chunk::PosVec(static_cast<Chunk::Position>(std::floor(x / static_cast<float>(Chunk::sizeX))),
+			static_cast<Chunk::Position>(std::floor(z / static_cast<float>(Chunk::sizeZ))))
+	);
+	auto chunkNotFound = chunkMap.cend();
+	chunkMapLock.unlock();
+
+	if (chunkMapFind != chunkNotFound)
+	{
+		//lx + 1, lz + 1 for padding
+		return chunkMapFind->second->data[lx + 1][ly][lz + 1];
+	}
+	else
+	{
+		//If chunk not loaded, throw exception
+		throw std::exception("getBlock(x, y, z): chunk not found");
+	}
 }

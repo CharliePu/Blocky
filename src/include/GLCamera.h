@@ -1,5 +1,7 @@
 #pragma once
 
+#include <mutex>
+
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
@@ -9,20 +11,25 @@
 class GLCamera
 {
 public:
+	typedef glm::vec3 PositionVec;
+	typedef glm::vec3 DirectionVec;
+
 	GLCamera(
-		const glm::vec3 &position = glm::vec3(0, 50, 0),
+		const PositionVec &position = PositionVec(0, 200, 0),
 		const float cursorSensitivity = 0.1f,
-		const float speed = 100.0f);
+		const float speed = 12.0f);
 	
-	inline const glm::mat4 &getViewMatrix();
 
 	void update(GLFWwindow * window);
 
-	glm::vec3 front;
-	glm::vec3 position;
+	inline const glm::mat4 &getViewMatrix();
+	inline const glm::vec3 &getFront();
+	inline const glm::vec3 getPosition();
 protected:
-	glm::vec3 right;
-	glm::vec3 up;
+	DirectionVec front;
+	PositionVec position;
+	DirectionVec right;
+	DirectionVec up;
 	glm::mat4 viewMatrix;
 	float speed, cursorSensitivity;
 
@@ -33,6 +40,16 @@ protected:
 inline const glm::mat4 &GLCamera::getViewMatrix()
 {
 	return viewMatrix;
+}
+
+inline const GLCamera::DirectionVec & GLCamera::getFront()
+{
+	return front;
+}
+
+inline const GLCamera::DirectionVec GLCamera::getPosition()
+{
+	return position;
 }
 
 inline void GLCamera::update(GLFWwindow * window)

@@ -2,19 +2,15 @@
 GLFWwindow* window;
 int windowWidth, windowHeight;
 World aWorld;
-Camera camera;
+Player camera;
 
 int main()
 {
 	initEnv();
 
 	GLShader shader("..\\src\\shaders\\block.vsh", "..\\src\\shaders\\block.fsh"), debugShader("../src/shaders/debug.vsh", "../src/shaders/debug.fsh");
-	
 
 	aWorld.enableUpdateThread();
-
-	//Wait for first rendering
-	while (!aWorld.renderFinished);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -23,18 +19,19 @@ int main()
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		shader.use();
-		updateProjectionMatrix(45, windowWidth / (double)windowHeight, 0.1, 1000);
-		updateViewMatrix(camera.position, camera.getViewMatrix());
+		updateProjectionMatrix(45, windowWidth / (double)windowHeight, 0.1, 100000);
+		updateViewMatrix(camera.getPosition(), camera.getViewMatrix());
 		updateModelMatrix(glm::vec3(0, 0, 0));
+		glUniform3f(getUniformLocation("cameraPosition"), camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
 
 		aWorld.draw();
 
 		debugShader.use();
-		updateProjectionMatrix(45, windowWidth / (double)windowHeight, 0.1, 1000);
-		updateViewMatrix(camera.position, camera.getViewMatrix());
+		updateProjectionMatrix(45, windowWidth / (double)windowHeight, 0.1, 100000);
+		updateViewMatrix(camera.getPosition(), camera.getViewMatrix());
 		updateModelMatrix(glm::vec3(0, 0, 0));
 
-//		aWorld.drawDebug();
+		//aWorld.drawDebug();
 
 		aWorld.updateCurrentChunkPosition();
 		aWorld.unloadDistantChunks();
@@ -117,7 +114,17 @@ void updateEnv()
 		frameRate = 0;
 		lastTime = glfwGetTime();
 	}
-	glfwSetWindowTitle(window, ("Blocky[FPS:" + std::to_string(FPS) + "\tPosition:" + std::to_string((int)camera.position.x) + "," + std::to_string((int)camera.position.y) + "," + std::to_string((int)camera.position.z)+"]").c_str());
+	int chunkX = 0, chunkZ = 0;
+	if (aWorld.getCurrentChunk())
+	{
+		chunkX = aWorld.getCurrentChunk()->chunkX;
+		chunkZ = aWorld.getCurrentChunk()->chunkZ;
+	}
+	glfwSetWindowTitle(window, ("Blocky FPS:" + std::to_string(FPS) + 
+		"CurrentChunk[" + std::to_string(chunkX) + ", " + std::to_string(chunkZ) + 
+		"] Camera[" + std::to_string(camera.getPosition().x) +
+		", " + std::to_string(camera.getPosition().y) +
+		", " + std::to_string(camera.getPosition().z)).c_str());
 }
 
 void updateWindowKeyCallback()

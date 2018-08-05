@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\include\glm\detail\</FILEPATH>
+      <FILENAME>type_half.inl</FILENAME>
+      <LINE>51</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function may not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>glm::detail::uif32::{ctor}</FUNCTION>
+    <DECORATED>??0uif32@detail@glm@@QEAA@XZ</DECORATED>
+    <FUNCLINE>51</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\src\</FILEPATH>
+      <FILENAME>gllighting.cpp</FILENAME>
+      <LINE>4</LINE>
+      <COLUMN>24</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function may not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>GLLighting::PointLight::{ctor}</FUNCTION>
+    <DECORATED>??0PointLight@GLLighting@@QEAA@XZ</DECORATED>
+    <FUNCLINE>4</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\src\</FILEPATH>
+      <FILENAME>gllighting.cpp</FILENAME>
+      <LINE>53</LINE>
+      <COLUMN>23</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function may not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>GLLighting::SpotLight::{ctor}</FUNCTION>
+    <DECORATED>??0SpotLight@GLLighting@@QEAA@XZ</DECORATED>
+    <FUNCLINE>53</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\src\</FILEPATH>
+      <FILENAME>gllighting.cpp</FILENAME>
+      <LINE>53</LINE>
+      <COLUMN>23</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'GLLighting::SpotLight::outerCutOff' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>GLLighting::SpotLight::{ctor}</FUNCTION>
+    <DECORATED>??0SpotLight@GLLighting@@QEAA@XZ</DECORATED>
+    <FUNCLINE>53</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\src\</FILEPATH>
+      <FILENAME>gllighting.cpp</FILENAME>
+      <LINE>53</LINE>
+      <COLUMN>23</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'GLLighting::SpotLight::cutOff' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>GLLighting::SpotLight::{ctor}</FUNCTION>
+    <DECORATED>??0SpotLight@GLLighting@@QEAA@XZ</DECORATED>
+    <FUNCLINE>53</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\include\glm\detail\</FILEPATH>
+      <FILENAME>type_vec3.inl</FILENAME>
+      <LINE>39</LINE>
+      <COLUMN>34</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function may not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>glm::tvec3&lt;float,0&gt;::{ctor}</FUNCTION>
+    <DECORATED>??0?$tvec3@M$0A@@glm@@QEAA@XZ</DECORATED>
+    <FUNCLINE>39</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

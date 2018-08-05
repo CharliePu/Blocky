@@ -10,7 +10,7 @@ uniform vec3 viewPos;
 
 void main()
 {
-	const float fogDensity = 0.0056;
+	const float fogDensity = 0.002;
 	
 	float fogFactor = 1.0 / exp(distanceToCamera * fogDensity * distanceToCamera * fogDensity);
 	fogFactor = clamp(fogFactor, 0.0f, 1.0f);

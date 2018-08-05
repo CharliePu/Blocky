@@ -1,7 +1,7 @@
 #include "GLCamera.h"
 
 GLCamera::GLCamera(
-	const glm::vec3 &position,
+	const GLCamera::PositionVec &position,
 	const float cursorSensitivity,
 	const float speed) :
 	front(0, 0, 1), position(position), up(0, 1, 0),

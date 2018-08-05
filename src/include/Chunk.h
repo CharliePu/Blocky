@@ -15,7 +15,7 @@ class Chunk
 {
 public:
 	static constexpr Block::Position sizeX = 32;
-	static constexpr Block::Position sizeY = 128;
+	static constexpr Block::Position sizeY = 512;
 	static constexpr Block::Position sizeZ = 32;
 
 	typedef int Position;
