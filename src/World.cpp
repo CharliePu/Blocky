@@ -49,7 +49,7 @@ void World::drawDebug()
 
 void World::updateCurrentChunkPosition()
 {
-	currentChunkPosition = glm::ivec2(std::floor((camera.getPosition().x) / Chunk::sizeX), std::floor((camera.getPosition().z) / Chunk::sizeZ));
+	currentChunkPosition.set(glm::ivec2(std::floor((camera.getPosition().x) / Chunk::sizeX), std::floor((camera.getPosition().z) / Chunk::sizeZ)));
 }
 
 void World::unloadDistantChunks()
@@ -81,7 +81,7 @@ void World::updateWorldLoop()
 {
 	while (!updateThreadShouldClose)
 	{
-		Chunk::PosVec centerChunkPosition = currentChunkPosition;
+		Chunk::PosVec centerChunkPosition = currentChunkPosition.get();
 
 		//clear back draw buffer
 		backDrawBuffer.clear();
@@ -156,6 +156,9 @@ void World::loadChunk(Chunk::PosVec position)
 
 Chunk * const World::getCurrentChunk()
 {
+	//thread-safe reading
+	Chunk::PosVec currentChunkPosition(this->currentChunkPosition.get());
+
 	//if currentchunk exists and equals to chunk position, use old value
 	if (currentChunk)
 		if (currentChunk->chunkX == currentChunkPosition.x && currentChunk->chunkZ == currentChunkPosition.y)

@@ -10,7 +10,6 @@
 
 #include "Player.h"
 #include "World.h"
-#include "Debug.h"
 
 void initEnv();
 

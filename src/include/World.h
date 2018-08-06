@@ -8,6 +8,7 @@
 #include "Chunk.h"
 #include "Player.h"
 #include "GLTexture.h"
+#include "ThreadSafeWrapper.hpp"
 
 class World
 {
@@ -52,7 +53,7 @@ private:
 	std::unordered_map <Chunk::PosVec, Chunk*, KeyHasher> chunkMap;
 
 	//chunk position is always up-to-date
-	Chunk::PosVec currentChunkPosition;
+	ThreadSafeWrapper<Chunk::PosVec> currentChunkPosition;
 	//chunk pointer need to be checked everytime
 	Chunk * currentChunk;
 

@@ -22,14 +22,8 @@
     <Filter Include="Header Files\Utility">
       <UniqueIdentifier>{4a840110-6049-4170-96a0-00bd9e770051}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Utility">
-      <UniqueIdentifier>{f434e0e1-ab0b-4d59-b485-742929a76724}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\include\Debug.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\include\Chunk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -63,17 +57,14 @@
     <ClInclude Include="..\src\include\Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\ThreadSafeWrapper.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\ThreadSafeWrapper.hpp">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\Debug.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Noise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -106,9 +97,6 @@
     </ClCompile>
     <ClCompile Include="..\src\Texture.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\ThreadSafeWrapper.cpp">
-      <Filter>Source Files\Utility</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Player.cpp">
       <Filter>Source Files</Filter>

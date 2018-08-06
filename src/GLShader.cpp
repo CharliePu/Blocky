@@ -57,7 +57,7 @@ void GLShader::readShaderCode(std::string &shaderCode, const std::string &filePa
 	}
 	else
 	{
-		sendError("Shader file " + filePath + " cannot be open");
+		std::cerr << "Shader file " + filePath + " cannot be open" << std::endl;
 	}
 	
 	shaderStream.close();
@@ -78,7 +78,7 @@ void GLShader::compileShader(const GLuint &shaderID, const std::string &filePath
 	glGetShaderInfoLog(shaderID, infoLogLength, NULL, &shaderErrorMessage[0]);
 	if (shaderErrorMessage[0])
 	{
-		sendError("Compile shader source:" + (std::string)&shaderErrorMessage[0]);
+		std::cerr << "Compile shader source:" + (std::string)&shaderErrorMessage[0] << std::endl;
 	}
 }
 
@@ -97,7 +97,7 @@ void GLShader::linkShader(const GLuint &programID, const GLuint &vertexShaderID,
 	glGetProgramInfoLog(programID, infoLogLength, NULL, &programErrorMessage[0]);
 	if (programErrorMessage[0])
 	{
-		sendError("Linking shader program: " + (std::string)&programErrorMessage[0]);
+		std::cerr << ("Linking shader program: " + (std::string)&programErrorMessage[0]) << std::endl;;
 	}
 }
 

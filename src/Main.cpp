@@ -49,7 +49,7 @@ void initEnv()
 	//init glfw library
 	if (!glfwInit())
 	{
-		sendError("Failed to initialize GLFW");
+		std::cerr << "Failed to initialize GLFW" << std::endl;
 	}
 
 	//set opengl parameters
@@ -60,12 +60,12 @@ void initEnv()
 	glfwWindowHint(GLFW_SAMPLES, 4);
 
 	//create glfw window
-	windowWidth = 500;
-	windowHeight = 500;
+	windowWidth = 2000;
+	windowHeight = 1500;
 	window = glfwCreateWindow(windowWidth, windowHeight, "EasyMinecraft", nullptr, nullptr);
 	if (window == nullptr)
 	{
-		sendError("Failed to create GLFW window");
+		std::cerr << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 	}
 	glfwMakeContextCurrent(window);
@@ -74,7 +74,7 @@ void initEnv()
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK)
 	{
-		sendError("Failed to initialize GLEW");
+		std::cerr << "Failed to initialize GLEW" << std::endl;
 	}
 
 	glfwSwapInterval(0);

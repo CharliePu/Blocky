@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <iostream>
 
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
@@ -10,8 +11,6 @@
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
-
-#include "Debug.h"
 
 //buffer the location of uniforms
 typedef std::map<std::string, GLuint> UniformBuffer;
