@@ -5,8 +5,7 @@ layout (location = 2) in vec2 texCoords;
 
 out vec2 TexCoords;
 out vec3 Normal;
-out vec3 ToCameraDirection;
-out vec3 CameraPosition;
+out vec3 Position;
 out float distanceToCamera;
 
 uniform vec3 cameraPosition;
@@ -19,7 +18,6 @@ void main()
     gl_Position = projection*view*vec4(position,1.0f);
 	TexCoords = texCoords;
 	Normal = normal;
-	CameraPosition = cameraPosition;
-	ToCameraDirection = position - cameraPosition;
+	Position = position;
 	distanceToCamera = length(view * vec4(position, 1.0f));
 }  

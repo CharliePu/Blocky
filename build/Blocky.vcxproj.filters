@@ -60,7 +60,7 @@
     <ClInclude Include="..\src\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\ThreadSafeWrapper.hpp">
+    <ClInclude Include="..\src\include\ThreadSafeWrapper.hpp">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
   </ItemGroup>

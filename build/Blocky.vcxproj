@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\include\ThreadSafeWrapper.hpp" />
     <ClInclude Include="..\src\Player.h" />
     <ClInclude Include="..\src\include\Block.h" />
     <ClInclude Include="..\src\include\Chunk.h" />
@@ -31,7 +32,6 @@
     <ClInclude Include="..\src\include\GLTexture.h" />
     <ClInclude Include="..\src\include\Texture.h" />
     <ClInclude Include="..\src\include\World.h" />
-    <ClInclude Include="..\src\ThreadSafeWrapper.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Block.cpp" />

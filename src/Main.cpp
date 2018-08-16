@@ -25,13 +25,16 @@ int main()
 		glUniform3f(getUniformLocation("cameraPosition"), camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
 
 		aWorld.draw();
+		
+		camera.selectUpdate();
 
 		debugShader.use();
 		updateProjectionMatrix(45, windowWidth / (double)windowHeight, 0.1, 100000);
 		updateViewMatrix(camera.getPosition(), camera.getViewMatrix());
 		updateModelMatrix(glm::vec3(0, 0, 0));
 
-		//aWorld.drawDebug();
+		camera.selectDraw();
+//		aWorld.drawDebug();
 
 		aWorld.updateCurrentChunkPosition();
 		aWorld.unloadDistantChunks();

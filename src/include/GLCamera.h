@@ -15,9 +15,9 @@ public:
 	typedef glm::vec3 DirectionVec;
 
 	GLCamera(
-		const PositionVec &position = PositionVec(0, 200, 0),
-		const float cursorSensitivity = 0.1f,
-		const float speed = 12.0f);
+		const PositionVec &position = PositionVec(0, 0, 0),
+		const float speed = 1.0f,
+		const float cursorSensitivity = 0.1f);
 	
 
 	void update(GLFWwindow * window);
@@ -26,6 +26,7 @@ public:
 	inline const glm::vec3 &getFront();
 	inline const glm::vec3 getPosition();
 protected:
+	//bug: front is reversed in direction
 	DirectionVec front;
 	PositionVec position;
 	DirectionVec right;

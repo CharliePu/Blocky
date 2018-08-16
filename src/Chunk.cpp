@@ -39,8 +39,6 @@ void Chunk::generate(Block::GlobalPosition noiseX, Block::GlobalPosition noiseZ)
 
 void Chunk::draw()
 {
-	if (this->needUpdate)
-		return;
 	if (this->needBindBuffer)
 	{
 		if (!this->vao)
@@ -78,10 +76,6 @@ void Chunk::draw()
 
 void Chunk::update()
 {
-	if (!needUpdate)
-	{
-		return;
-	}
 	//Temporary vertex buffer
 	std::vector<Vertex> tempVertexBuffer[Block::typeNum]{};
 
@@ -104,6 +98,7 @@ void Chunk::update()
 	}
 
 	needUpdate = false;
+	needBindBuffer = true;
 }
 
 void Chunk::save()

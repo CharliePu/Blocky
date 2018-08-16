@@ -2,8 +2,8 @@
 
 GLCamera::GLCamera(
 	const GLCamera::PositionVec &position,
-	const float cursorSensitivity,
-	const float speed) :
+	const float speed,
+	const float cursorSensitivity) :
 	front(0, 0, 1), position(position), up(0, 1, 0),
 	speed(speed), cursorSensitivity(cursorSensitivity)
 {}

@@ -13,7 +13,7 @@
 class World
 {
 public:
-	static constexpr Chunk::Position renderSize = 6;
+	static constexpr Chunk::Position renderSize = 2;
 
 	World();
 
@@ -33,7 +33,11 @@ public:
 	Chunk * const getCurrentChunk();	
 	void loadChunk(Chunk::PosVec position);
 	bool chunkOutsideRenderZone(const Chunk &chunk, const Chunk::PosVec &centerChunkPosition, const int &renderSize);
-	Block::Type getBlock(const Block::GlobalPosition &x, const Block::GlobalPosition &y, const Block::GlobalPosition &z);
+	
+	Block::Type getBlock(const Block::GlobalPosVec &pos);
+	Block::Type *findBlock(const Block::GlobalPosVec pos);
+	bool setBlock(const Block::GlobalPosVec &pos, const Block::Type &type);
+	void updateChunkForBlock(const Block::PosVec &localPos, Chunk* chunk);
 
 private:
 
@@ -50,7 +54,7 @@ private:
 		}
 	};
 
-	std::unordered_map <Chunk::PosVec, Chunk*, KeyHasher> chunkMap;
+	ThreadSafeWrapper<std::unordered_map <Chunk::PosVec, Chunk*, KeyHasher>> chunkMap;
 
 	//chunk position is always up-to-date
 	ThreadSafeWrapper<Chunk::PosVec> currentChunkPosition;
@@ -61,6 +65,7 @@ private:
 	std::thread updateThread;
 	std::atomic_bool updateThreadShouldClose;
 	void updateWorldLoop();
+
 };
 
 inline bool World::chunkOutsideRenderZone(const Chunk& chunk, const Chunk::PosVec &centerChunkPosition, const int &renderSize)

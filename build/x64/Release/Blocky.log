@@ -1,19 +1,22 @@
-﻿  World.cpp
+﻿  Main.cpp
+  Player.cpp
+d:\projects\blocky - opengl\src\player.cpp(187): warning C4305: '+=': truncation from 'double' to 'float'
+  World.cpp
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Generating code
-  2 of 1221 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+  0 of 1372 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    8 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
+Player.obj : warning LNK4049: locally defined symbol __glewGenBuffers imported
+Player.obj : warning LNK4049: locally defined symbol __glewGenVertexArrays imported
+Player.obj : warning LNK4049: locally defined symbol __glewBufferData imported
+Player.obj : warning LNK4049: locally defined symbol __glewBindBuffer imported
+Player.obj : warning LNK4049: locally defined symbol __glewVertexAttribPointer imported
+Player.obj : warning LNK4049: locally defined symbol __glewBindVertexArray imported
+Player.obj : warning LNK4049: locally defined symbol __glewEnableVertexAttribArray imported
 Chunk.obj : warning LNK4049: locally defined symbol __glewDeleteBuffers imported
-Chunk.obj : warning LNK4049: locally defined symbol __glewGenBuffers imported
-Chunk.obj : warning LNK4049: locally defined symbol __glewGenVertexArrays imported
-Chunk.obj : warning LNK4049: locally defined symbol __glewBufferData imported
 Chunk.obj : warning LNK4049: locally defined symbol __glewDeleteVertexArrays imported
-Chunk.obj : warning LNK4049: locally defined symbol __glewBindBuffer imported
-Chunk.obj : warning LNK4049: locally defined symbol __glewVertexAttribPointer imported
-Chunk.obj : warning LNK4049: locally defined symbol __glewBindVertexArray imported
-Chunk.obj : warning LNK4049: locally defined symbol __glewEnableVertexAttribArray imported
 GLFramebuffer.obj : warning LNK4049: locally defined symbol __glewGenRenderbuffers imported
 GLFramebuffer.obj : warning LNK4049: locally defined symbol __glewBindFramebuffer imported
 GLFramebuffer.obj : warning LNK4049: locally defined symbol __glewBindRenderbuffer imported

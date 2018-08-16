@@ -20,7 +20,7 @@ World::World() :
 
 void World::removeAll()
 {
-	for (auto i : chunkMap)
+	for (auto i : *chunkMap)
 	{
 		delete i.second;
 	}
@@ -106,7 +106,9 @@ void World::updateWorldLoop()
 			{
 				unloadBuffer.push_back(i);
 				//erase from chunkMap so renderer has no way to access it again before it is deleted
-				chunkMap.erase(Chunk::PosVec(i->chunkX, i->chunkZ));
+				chunkMap.operateWriting([&]{
+					chunkMap->erase(Chunk::PosVec(i->chunkX, i->chunkZ));
+				});
 				//reset to nullptr if currentChunk is going to be deleted
 				if (i == currentChunk)
 				{
@@ -124,7 +126,7 @@ void World::updateWorldLoop()
 void World::loadChunk(Chunk::PosVec position)
 {
 	Chunk *chunk;
-	if (chunkMap.find(position) == chunkMap.cend())
+	if (chunkMap.operateReading<bool>([&] { return chunkMap->find(position) == chunkMap->cend(); }))
 	{
 		//allocate new Chunk
 		try
@@ -137,9 +139,11 @@ void World::loadChunk(Chunk::PosVec position)
 		}
 
 		//prevent reading in other threads while STL container is being written
-		chunkMapLock.lock();
-		chunkMap.insert({ position, chunk });
-		chunkMapLock.unlock();
+		//chunkMapLock.lock();
+		chunkMap.operateWriting([&]{
+			chunkMap->insert({ position, chunk });
+			});
+		//chunkMapLock.unlock();
 
 		if (!chunk->load())
 		{
@@ -149,7 +153,7 @@ void World::loadChunk(Chunk::PosVec position)
 	}
 	else
 	{
-		chunk = chunkMap[position];
+		chunk = chunkMap.operateReading<Chunk*>([&] { return (*chunkMap)[position]; });
 	}
 	backDrawBuffer.push_back(chunk);
 }
@@ -165,45 +169,78 @@ Chunk * const World::getCurrentChunk()
 			return currentChunk;
 
 	//Find chunk in chunkmap, if no found, use old value
-	if (chunkMapLock.try_lock())
+	//if (chunkMapLock.try_lock())
 	{
-		auto findCurrentChunk = chunkMap.find(currentChunkPosition);
-		currentChunk = findCurrentChunk == chunkMap.cend() ? currentChunk : (*findCurrentChunk).second;
-		chunkMapLock.unlock();
+		decltype(chunkMap->cend()) findCurrentChunk, chunkEnd;
+		chunkMap.operateReading([&] {
+			findCurrentChunk = chunkMap->find(currentChunkPosition);
+			chunkEnd = chunkMap->cend();
+		});
+
+		currentChunk = findCurrentChunk == chunkEnd ? currentChunk : (*findCurrentChunk).second;
+		//chunkMapLock.unlock();
 	}
 	return currentChunk;
 }
 
-
-Block::Type World::getBlock(const Block::GlobalPosition & x, const Block::GlobalPosition & y, const Block::GlobalPosition & z)
+Block::Type * World::findBlock(const Block::GlobalPosVec pos)
 {
-	//If y outside chunk boundry, return air
-	if (y < 0 || y >= Chunk::sizeY) return Block::AIR;
-	
-	//Convert position into local position
-	auto lx = x % Chunk::sizeX;
-	if (lx < 0) lx += Chunk::sizeX;
-	auto ly = y;
-	auto lz = z % Chunk::sizeZ;
-	if (lz < 0) lz += Chunk::sizeZ;
+	//return nullptr if y outside chunk boundry
+	if (pos.y < 0 || pos.y >= Chunk::sizeY) return nullptr;
 
-	//Find target chunk
-	chunkMapLock.lock();
-	auto chunkMapFind = chunkMap.find(
-		Chunk::PosVec(static_cast<Chunk::Position>(std::floor(x / static_cast<float>(Chunk::sizeX))),
-			static_cast<Chunk::Position>(std::floor(z / static_cast<float>(Chunk::sizeZ))))
-	);
-	auto chunkNotFound = chunkMap.cend();
-	chunkMapLock.unlock();
+	auto localPos = Chunk::toLocalPosition(pos);
+	auto chunkPos = Chunk::toChunkPosition(pos);
 
-	if (chunkMapFind != chunkNotFound)
+	decltype(chunkMap->cend()) chunkMapFind, chunkEnd;
+	chunkMap.operateReading([&] {
+		chunkMapFind = chunkMap->find(chunkPos);
+		chunkEnd = chunkMap->cend();
+	});
+
+	////Find target chunk
+	//chunkMapLock.lock();
+	//auto chunkMapFind = chunkMap.find(chunkPos);
+	//auto chunkEnd = chunkMap.cend();
+	//chunkMapLock.unlock();
+
+	if (chunkMapFind != chunkEnd)
 	{
 		//lx + 1, lz + 1 for padding
-		return chunkMapFind->second->data[lx + 1][ly][lz + 1];
+		return &chunkMapFind->second->data[localPos.x + 1][localPos.y][localPos.z + 1];
 	}
 	else
 	{
-		//If chunk not loaded, throw exception
-		throw std::exception("getBlock(x, y, z): chunk not found");
+		//return nullptr if chunk not found
+		return nullptr;
 	}
+}
+
+Block::Type World::getBlock(const Block::GlobalPosVec &pos)
+{
+	Block::Type *block = findBlock(pos);
+	if (block)
+		return *block;
+	else
+		return Block::AIR;
+}
+
+//return success or not
+bool World::setBlock(const Block::GlobalPosVec &pos, const Block::Type &type)
+{
+	Block::Type *block = findBlock(pos);
+	if (!block)
+		return false;
+	*block = type;
+	return true;
+}
+
+void World::updateChunkForBlock(const Block::PosVec & localPos, Chunk * chunk)
+{
+	if (!chunk)
+	{
+		std::cerr << "UpdateChunkForBlock(PosVec, Chunk*): Chunk is nullptr" << std::endl;
+		return;
+	}
+	chunk->update();
+	//if (loadPos)
 }
