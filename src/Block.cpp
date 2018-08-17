@@ -98,8 +98,8 @@ const glm::ivec3 Block::vertexNormals[6] =
 	glm::ivec3(-1, 0, 0),
 	glm::ivec3(0, 1, 0),
 	glm::ivec3(0,-1, 0),
-	glm::ivec3(0, 0, 1),
-	glm::ivec3(0, 0,-1)
+	glm::ivec3(0, 0,-1),
+	glm::ivec3(0, 0, 1)
 };
 
 const glm::ivec2 Block::vertexTexCoords[6]
@@ -113,30 +113,3 @@ const glm::ivec2 Block::vertexTexCoords[6]
 	glm::vec2(0,0)
 };
 
-Block::Face Block::getFace(const glm::vec3 &point)
-{
-	float i;
-	glm::vec3 internalPoint(
-		std::modf(point.x, &i), 
-		std::modf(point.y, &i), 
-		std::modf(point.z, &i));
-	if (point.x < 0)
-		internalPoint.x = 0 - internalPoint.x;
-	if (point.y < 0)
-		internalPoint.y = 0 - internalPoint.y;
-	if (point.z < 0)
-		internalPoint.z = 0 - internalPoint.z;
-	
-	float d(INFINITY), dis;
-	Face face;
-	for (size_t i = 0; i != 6; ++i)
-	{
-		dis = glm::distance(internalPoint, centerPointsOnFace[i]);
-		if (dis < d)
-		{
-			d = dis;
-			face = static_cast<Face>(i);
-		}
-	}
-	return face;
-}

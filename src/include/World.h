@@ -10,6 +10,7 @@
 #include "GLTexture.h"
 #include "ThreadSafeWrapper.hpp"
 
+
 class World
 {
 public:
@@ -37,7 +38,7 @@ public:
 	Block::Type getBlock(const Block::GlobalPosVec &pos);
 	Block::Type *findBlock(const Block::GlobalPosVec pos);
 	bool setBlock(const Block::GlobalPosVec &pos, const Block::Type &type);
-	void updateChunkForBlock(const Block::PosVec &localPos, Chunk* chunk);
+	void updateChunksForBlock(const Block::GlobalPosVec &pos);
 
 private:
 

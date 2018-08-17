@@ -209,7 +209,7 @@ void Player::selectUpdate()
 		}
 	}
 
-	selectFace = Block::getFace(checkPos);
+	selectFace = getFace(checkPos);
 	selectPos = truncPos;
 }
 
@@ -240,4 +240,34 @@ void Player::selectDraw()
 bool Player::putBlockNearFace(const Block::GlobalPosVec & pos, const Block::Face face, const Block::Type type)
 {
 	return aWorld.setBlock(pos + static_cast<Block::GlobalPosVec>(Block::vertexNormals[static_cast<size_t>(face)]), type);
+}
+
+Block::Face Player::getFace(const DirectionVec &point)
+{
+	float i;
+	glm::vec3 internalPoint(
+		std::modf(point.x, &i),
+		std::modf(point.y, &i),
+		std::modf(point.z, &i)
+	);
+
+	if (point.x < 0)
+		internalPoint.x = 0 - internalPoint.x;
+	if (point.y < 0)
+		internalPoint.y = 0 - internalPoint.y;
+	if (point.z < 0)
+		internalPoint.z = 0 - internalPoint.z;
+
+	float d(INFINITY), dis;
+	Block::Face face;
+	for (size_t i = 0; i != 6; ++i)
+	{
+		dis = glm::distance(internalPoint, Block::centerPointsOnFace[i]);
+		if (dis < d)
+		{
+			d = dis;
+			face = static_cast<Block::Face>(i);
+		}
+	}
+	return face;
 }

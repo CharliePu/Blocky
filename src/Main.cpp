@@ -34,7 +34,7 @@ int main()
 		updateModelMatrix(glm::vec3(0, 0, 0));
 
 		camera.selectDraw();
-//		aWorld.drawDebug();
+		aWorld.drawDebug();
 
 		aWorld.updateCurrentChunkPosition();
 		aWorld.unloadDistantChunks();

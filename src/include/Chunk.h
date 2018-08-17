@@ -14,6 +14,7 @@
 
 class Chunk
 {
+	friend class World;
 public:
 	static constexpr Block::Position sizeX = 32;
 	static constexpr Block::Position sizeY = 512;
@@ -35,7 +36,7 @@ public:
 	Chunk::Position chunkX, chunkZ;
 
 	Block::Type data[Chunk::sizeX + 2][Chunk::sizeY + 2][Chunk::sizeZ + 2];
-	bool needBindBuffer, needUpdate;
+	bool needBindBuffer;
 
 	static Block::PosVec toLocalPosition(const Block::GlobalPosVec &pos);
 	static Chunk::PosVec toChunkPosition(const Block::GlobalPosVec &pos);

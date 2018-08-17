@@ -231,16 +231,67 @@ bool World::setBlock(const Block::GlobalPosVec &pos, const Block::Type &type)
 	if (!block)
 		return false;
 	*block = type;
+
+	updateChunksForBlock(pos);
 	return true;
 }
 
-void World::updateChunkForBlock(const Block::PosVec & localPos, Chunk * chunk)
+void World::updateChunksForBlock(const Block::GlobalPosVec & pos)
 {
-	if (!chunk)
+	auto localPos = Chunk::toLocalPosition(pos);
+	decltype(chunkMap->end()) findChunk;
+	chunkMap.operateReading([&]
 	{
-		std::cerr << "UpdateChunkForBlock(PosVec, Chunk*): Chunk is nullptr" << std::endl;
-		return;
-	}
+		findChunk = chunkMap->find(Chunk::toChunkPosition(pos));
+		if (findChunk == chunkMap->end())
+		{
+			std::cerr << "UpdateChunkForBlock(GlobalPosVec): Chunk no exist" << std::endl;
+			return;
+		}
+	});
+
+	Chunk * const &chunk = findChunk->second;
 	chunk->update();
-	//if (loadPos)
+	chunkMap.operateReading([&] 
+	{
+		auto chunkNotFound = chunkMap->end();
+		auto &blockType = chunk->data[localPos.x + 1][localPos.y][localPos.z + 1];
+		if (localPos.x == 0)
+		{
+			auto aChunk = chunkMap->find({ chunk->chunkX - 1, chunk->chunkZ });
+			if (aChunk != chunkNotFound)
+			{
+				aChunk->second->data[Chunk::sizeX + 1][localPos.y][localPos.z + 1] = blockType;
+				aChunk->second->update();
+			}
+		}
+		if (localPos.x == Chunk::sizeX - 1)
+		{
+			auto aChunk = chunkMap->find({ chunk->chunkX + 1, chunk->chunkZ });
+			if (aChunk != chunkNotFound)
+			{
+				aChunk->second->data[0][localPos.y][localPos.z + 1] = blockType;
+				aChunk->second->update();
+			}
+		}
+		if (localPos.z == 0)
+		{
+			auto aChunk = chunkMap->find({ chunk->chunkX, chunk->chunkZ - 1 });
+			if (aChunk != chunkNotFound)
+			{
+				aChunk->second->data[localPos.x + 1][localPos.y][Chunk::sizeX + 1] = blockType;
+				aChunk->second->update();
+			}
+		}
+		if (localPos.z == Chunk::sizeZ - 1)
+		{
+			auto aChunk = chunkMap->find({ chunk->chunkX, chunk->chunkZ + 1 });
+			if (aChunk != chunkNotFound)
+			{
+				aChunk->second->data[localPos.x + 1][localPos.y][0] = blockType;
+				aChunk->second->update();
+			}
+		}
+	}
+	);
 }

@@ -3,7 +3,7 @@
 
 Chunk::Chunk(Chunk::PosVec position) :
 	chunkX(position.x), chunkZ(position.y),
-	needBindBuffer(true), needUpdate(true),
+	needBindBuffer(true), 
 	vao(0), vbo(0),
 	debugVao(0), debugVbo(0),
 	vertexBuffer(), verticesOffset(),
@@ -97,7 +97,6 @@ void Chunk::update()
 		verticesOffset[i + 1] = static_cast<GLsizei>(vertexBuffer.size());
 	}
 
-	needUpdate = false;
 	needBindBuffer = true;
 }
 

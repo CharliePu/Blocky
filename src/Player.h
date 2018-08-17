@@ -27,4 +27,5 @@ public:
 private:
 	void updateKeyCallback(GLFWwindow * window) override;
 	void updateCursorCallback(GLFWwindow * window) override;
+	Block::Face getFace(const DirectionVec &point);
 };

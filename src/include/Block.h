@@ -46,6 +46,4 @@ struct Block
 	} Face;
 
 	static const unsigned short Block::typeNum = 5;
-
-	static Face getFace(const glm::vec3 &point);
 };
