@@ -17,7 +17,7 @@ public:
 		DIFFUSE_MAP,
 		SPECULAR_MAP,
 		REFLECTION_MAP,
-		CUB_MAP,
+		CUBE_MAP,
 		ATLAS
 	};
 

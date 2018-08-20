@@ -19,6 +19,7 @@ public:
 
 	Block::GlobalPosVec selectPos;
 	Block::Face selectFace;
+	Block::Type selectBlock;
 
 	void selectUpdate();
 	void selectDraw();

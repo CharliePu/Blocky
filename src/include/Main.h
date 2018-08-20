@@ -10,6 +10,8 @@
 
 #include "Player.h"
 #include "World.h"
+#include "GLLighting.h"
+#include "GLFrameBuffer.hpp"
 
 void initEnv();
 

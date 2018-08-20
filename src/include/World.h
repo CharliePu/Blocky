@@ -8,13 +8,14 @@
 #include "Chunk.h"
 #include "Player.h"
 #include "GLTexture.h"
+#include "GLShader.h"
 #include "ThreadSafeWrapper.hpp"
 
 
 class World
 {
 public:
-	static constexpr Chunk::Position renderSize = 2;
+	static constexpr Chunk::Position renderSize = 10;
 
 	World();
 
@@ -26,6 +27,7 @@ public:
 
 	void updateCurrentChunkPosition();
 	void unloadDistantChunks();
+	void updateProceduralFog();
 
 	void enableUpdateThread();
 	void disableUpdateThread();
@@ -39,7 +41,7 @@ public:
 	Block::Type *findBlock(const Block::GlobalPosVec pos);
 	bool setBlock(const Block::GlobalPosVec &pos, const Block::Type &type);
 	void updateChunksForBlock(const Block::GlobalPosVec &pos);
-
+	bool chunkInViewFrustrum(Chunk * const &chunk);
 private:
 
 	std::vector<Chunk*> frontDrawBuffer, backDrawBuffer;
@@ -65,7 +67,9 @@ private:
 	//Update thread
 	std::thread updateThread;
 	std::atomic_bool updateThreadShouldClose;
+	Chunk::Position currentRenderSize;
 	void updateWorldLoop();
+	
 
 };
 

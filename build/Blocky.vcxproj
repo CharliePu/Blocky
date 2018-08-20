@@ -19,12 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\include\GLFrameBuffer.hpp" />
+    <ClInclude Include="..\src\include\Shadow.h" />
     <ClInclude Include="..\src\include\ThreadSafeWrapper.hpp" />
     <ClInclude Include="..\src\Player.h" />
     <ClInclude Include="..\src\include\Block.h" />
     <ClInclude Include="..\src\include\Chunk.h" />
     <ClInclude Include="..\src\include\GLCamera.h" />
-    <ClInclude Include="..\src\include\GLFramebuffer.h" />
     <ClInclude Include="..\src\include\Main.h" />
     <ClInclude Include="..\src\include\GLLighting.h" />
     <ClInclude Include="..\src\include\Noise.h" />
@@ -44,6 +45,7 @@
     <ClCompile Include="..\src\Noise.cpp" />
     <ClCompile Include="..\src\GLShader.cpp" />
     <ClCompile Include="..\src\GLTexture.cpp" />
+    <ClCompile Include="..\src\Shadow.cpp" />
     <ClCompile Include="..\src\Texture.cpp" />
     <ClCompile Include="..\src\World.cpp" />
   </ItemGroup>

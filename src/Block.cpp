@@ -94,12 +94,12 @@ const unsigned short Block::vertexLineIndices[48]
 
 const glm::ivec3 Block::vertexNormals[6] =
 {
-	glm::ivec3(1, 0, 0),
+	glm::ivec3( 1, 0, 0),
 	glm::ivec3(-1, 0, 0),
 	glm::ivec3(0, 1, 0),
 	glm::ivec3(0,-1, 0),
-	glm::ivec3(0, 0,-1),
-	glm::ivec3(0, 0, 1)
+	glm::ivec3(0, 0, 1),
+	glm::ivec3(0, 0,-1)
 };
 
 const glm::ivec2 Block::vertexTexCoords[6]

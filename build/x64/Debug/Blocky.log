@@ -1,4 +1,4 @@
-﻿  Block.cpp
+﻿  World.cpp
   SOIL.lib(SOIL.obj) : MSIL .netmodule or module compiled with /GL found; restarting link with /LTCG; add /LTCG to the link command line to improve linker performance
 LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
@@ -23,13 +23,20 @@ Chunk.obj : warning LNK4049: locally defined symbol __glewGenVertexArrays import
 Chunk.obj : warning LNK4049: locally defined symbol __glewDeleteBuffers imported
 Chunk.obj : warning LNK4049: locally defined symbol __glewDeleteVertexArrays imported
 GLFramebuffer.obj : warning LNK4049: locally defined symbol __glewBindFramebuffer imported
+Shadow.obj : warning LNK4049: locally defined symbol __glewBindFramebuffer imported
 GLFramebuffer.obj : warning LNK4049: locally defined symbol __glewBindRenderbuffer imported
+Shadow.obj : warning LNK4049: locally defined symbol __glewBindRenderbuffer imported
 GLFramebuffer.obj : warning LNK4049: locally defined symbol __glewFramebufferRenderbuffer imported
+Shadow.obj : warning LNK4049: locally defined symbol __glewFramebufferRenderbuffer imported
 GLFramebuffer.obj : warning LNK4049: locally defined symbol __glewFramebufferTexture2D imported
 GLFramebuffer.obj : warning LNK4049: locally defined symbol __glewGenFramebuffers imported
+Shadow.obj : warning LNK4049: locally defined symbol __glewGenFramebuffers imported
 GLFramebuffer.obj : warning LNK4049: locally defined symbol __glewGenRenderbuffers imported
+Shadow.obj : warning LNK4049: locally defined symbol __glewGenRenderbuffers imported
 GLFramebuffer.obj : warning LNK4049: locally defined symbol __glewRenderbufferStorage imported
+Shadow.obj : warning LNK4049: locally defined symbol __glewRenderbufferStorage imported
 GLLighting.obj : warning LNK4049: locally defined symbol __glewUniform1f imported
+World.obj : warning LNK4049: locally defined symbol __glewUniform1f imported
 GLLighting.obj : warning LNK4049: locally defined symbol __glewUniform3fv imported
 GLShader.obj : warning LNK4049: locally defined symbol __glewUniform3fv imported
 GLShader.obj : warning LNK4049: locally defined symbol __glewAttachShader imported
@@ -48,4 +55,5 @@ GLShader.obj : warning LNK4049: locally defined symbol __glewShaderSource import
 GLShader.obj : warning LNK4049: locally defined symbol __glewUniformMatrix4fv imported
 GLShader.obj : warning LNK4049: locally defined symbol __glewUseProgram imported
 GLTexture.obj : warning LNK4049: locally defined symbol __glewGenerateMipmap imported
+Shadow.obj : warning LNK4049: locally defined symbol __glewCheckFramebufferStatus imported
   Blocky.vcxproj -> D:\Projects\Blocky - OpenGL\build\x64\Debug\Blocky.exe

@@ -5,10 +5,9 @@ layout (location = 2) in vec2 texCoords;
 
 out vec2 TexCoords;
 out vec3 Normal;
-out vec3 Position;
+out vec3 fragPos;
 out float distanceToCamera;
 
-uniform vec3 cameraPosition;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
@@ -18,6 +17,6 @@ void main()
     gl_Position = projection*view*vec4(position,1.0f);
 	TexCoords = texCoords;
 	Normal = normal;
-	Position = position;
+	fragPos = position;
 	distanceToCamera = length(view * vec4(position, 1.0f));
 }  

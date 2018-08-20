@@ -48,7 +48,7 @@ inline const GLCamera::DirectionVec & GLCamera::getFront()
 	return front;
 }
 
-inline const GLCamera::DirectionVec GLCamera::getPosition()
+inline const GLCamera::PositionVec GLCamera::getPosition()
 {
 	return position;
 }

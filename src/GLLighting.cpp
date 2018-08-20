@@ -35,7 +35,7 @@ void GLLighting::PointLight::apply()
 
 void GLLighting::DirectionLight::set(glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular)
 {
-	this->direction = direction;
+	this->direction = glm::normalize(direction);
 	this->ambient	= ambient;
 	this->diffuse	= diffuse;
 	this->specular	= specular;

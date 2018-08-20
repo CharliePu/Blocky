@@ -42,9 +42,6 @@
     <ClInclude Include="..\src\include\GLCamera.h">
       <Filter>Header Files\GL</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\GLFramebuffer.h">
-      <Filter>Header Files\GL</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\include\GLLighting.h">
       <Filter>Header Files\GL</Filter>
     </ClInclude>
@@ -62,6 +59,12 @@
     </ClInclude>
     <ClInclude Include="..\src\include\ThreadSafeWrapper.hpp">
       <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\GLFrameBuffer.hpp">
+      <Filter>Header Files\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\Shadow.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -99,6 +102,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Shadow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

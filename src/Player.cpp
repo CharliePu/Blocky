@@ -30,6 +30,7 @@ void Player::updateKeyCallback(GLFWwindow * window)
 			postPosition -= speed * up * deltaTime;
 		if (glfwGetKey(window, GLFW_KEY_SPACE))
 		{
+			postPosition += speed * up * deltaTime;
 			if (fspeed == 0)
 			{
 				fspeed = 8;
@@ -119,9 +120,12 @@ void Player::updateCursorCallback(GLFWwindow * window)
 		if (!rPressed)
 		{
 			rPressed = true;
-			if (putBlockNearFace(selectPos, selectFace, Block::COBBLESTONE))
+			if (selectBlock != Block::AIR)
 			{
-				aWorld.getCurrentChunk()->update();
+				if (putBlockNearFace(selectPos, selectFace, Block::COBBLESTONE))
+				{
+					aWorld.getCurrentChunk()->update();
+				}
 			}
 		}
 	}
@@ -200,15 +204,18 @@ void Player::selectUpdate()
 	for (auto i = 0.0f; i < selectRadius; i += 0.01f)
 	{
 		checkPos -= rayDir * 0.01f;
-		truncPos = { static_cast<Block::GlobalPosition>(std::floor(checkPos.x)),
+		truncPos = { 
+			static_cast<Block::GlobalPosition>(std::floor(checkPos.x)),
 			static_cast<Block::GlobalPosition>(std::floor(checkPos.y)),
-			static_cast<Block::GlobalPosition>(std::floor(checkPos.z)) };
+			static_cast<Block::GlobalPosition>(std::floor(checkPos.z)) 
+		};
 		if (aWorld.getBlock(truncPos))
 		{
 			break;
 		}
 	}
 
+	selectBlock = aWorld.getBlock(truncPos);
 	selectFace = getFace(checkPos);
 	selectPos = truncPos;
 }

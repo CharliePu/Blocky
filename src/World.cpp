@@ -9,7 +9,8 @@ World::World() :
 	frontDrawBuffer(), backDrawBuffer(), unloadBuffer(),
 	frontBufferLock(), unloadBufferLock(), chunkMapLock(), 
 	updateThread(&World::updateWorldLoop, this),
-	chunkMap(), currentChunkPosition(), currentChunk()
+	chunkMap(), currentChunkPosition(), currentChunk(),
+	currentRenderSize()
 {
 	static bool isTextureInited = false;
 	if (!isTextureInited)
@@ -32,7 +33,8 @@ void World::draw()
 	frontBufferLock.lock();
 	for (auto i : frontDrawBuffer)
 	{
-		i->draw();
+		if (chunkInViewFrustrum(i))
+			i->draw();
 	}
 	frontBufferLock.unlock();
 }
@@ -64,6 +66,20 @@ void World::unloadDistantChunks()
 	unloadBufferLock.unlock();
 }
 
+void World::updateProceduralFog()
+{
+	static constexpr float loadingSpeed = 0.1f;
+	static float deltaTime, pastTime = 0;
+	deltaTime = static_cast<float>(glfwGetTime()) - pastTime;
+	static float fogNear = 0, fogFar = Chunk::sizeX;
+	if (fogNear < (currentRenderSize - 1) * Chunk::sizeX)
+		fogNear += deltaTime * loadingSpeed;
+	if (fogFar < currentRenderSize * Chunk::sizeX)
+		fogFar += deltaTime * loadingSpeed;
+	glUniform1f(getUniformLocation("fogNear"), fogNear);
+	glUniform1f(getUniformLocation("fogFar"), fogFar);
+}
+
 void World::enableUpdateThread()
 {
 	updateThreadShouldClose = false;
@@ -79,9 +95,33 @@ void World::disableUpdateThread()
 
 void World::updateWorldLoop()
 {
+	// first generation
+	Chunk::PosVec centerChunkPosition = currentChunkPosition.get();
+	loadChunk(centerChunkPosition);
+	for (int i = 1; i <= renderSize; ++i)
+	{
+		for (int x = -i; x != i; ++x)
+			loadChunk(centerChunkPosition + Chunk::PosVec(x, i));
+
+		for (int z = i; z != -i; --z)
+			loadChunk(centerChunkPosition + Chunk::PosVec(i, z));
+
+		for (int x = i; x != -i; --x)
+			loadChunk(centerChunkPosition + Chunk::PosVec(x, -i));
+
+		for (int z = -i; z != i; ++z)
+			loadChunk(centerChunkPosition + Chunk::PosVec(-i, z));
+
+		frontBufferLock.lock();
+		frontDrawBuffer = backDrawBuffer;
+		frontBufferLock.unlock();
+
+		currentRenderSize = i;
+	}
+
 	while (!updateThreadShouldClose)
 	{
-		Chunk::PosVec centerChunkPosition = currentChunkPosition.get();
+		centerChunkPosition = currentChunkPosition.get();
 
 		//clear back draw buffer
 		backDrawBuffer.clear();
@@ -294,4 +334,22 @@ void World::updateChunksForBlock(const Block::GlobalPosVec & pos)
 		}
 	}
 	);
+}
+
+//cull chunks before rendering
+bool World::chunkInViewFrustrum(Chunk * const & chunk)
+{
+	static const float cutOff = glm::radians(90.0f);
+
+	if (std::abs(chunk->chunkX - currentChunkPosition->x) <= 1 ||
+		std::abs(chunk->chunkZ - currentChunkPosition->y) <= 1) return true;
+
+	glm::vec2 chunkPos((chunk->chunkX + 0.5) * Chunk::sizeX, (chunk->chunkZ + 0.5) * Chunk::sizeX);
+	glm::vec2 chunkDir = glm::normalize(chunkPos - glm::vec2(camera.getPosition().x, camera.getPosition().z));
+	glm::vec2 cameraDir = glm::normalize(glm::vec2(-camera.getFront().x, -camera.getFront().z));
+	float angle = std::acos(glm::dot(chunkDir, cameraDir));
+	if (angle < cutOff)
+		return true;
+	else
+		return false;
 }

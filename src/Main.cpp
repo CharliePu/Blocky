@@ -3,12 +3,15 @@ GLFWwindow* window;
 int windowWidth, windowHeight;
 World aWorld;
 Player camera;
+GLLighting::DirectionLight sun;
+
 
 int main()
 {
 	initEnv();
-
+	
 	GLShader shader("..\\src\\shaders\\block.vsh", "..\\src\\shaders\\block.fsh"), debugShader("../src/shaders/debug.vsh", "../src/shaders/debug.fsh");
+	sun.set({ 0,-1,0 }, { 0.7,0.7,0.7 }, { 0.7,0.7,0.7 }, { 0.2,0.2,0.2 });
 
 	aWorld.enableUpdateThread();
 
@@ -22,8 +25,12 @@ int main()
 		updateProjectionMatrix(45, windowWidth / (double)windowHeight, 0.1, 100000);
 		updateViewMatrix(camera.getPosition(), camera.getViewMatrix());
 		updateModelMatrix(glm::vec3(0, 0, 0));
-		glUniform3f(getUniformLocation("cameraPosition"), camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
-
+		glm::vec3 viewDir = -glm::normalize(camera.getFront());
+		glUniform3fv(getUniformLocation("cameraDir"), 1, glm::value_ptr(viewDir));
+		glm::vec3 viewPos = camera.getPosition();
+		glUniform3fv(getUniformLocation("cameraPos"), 1, glm::value_ptr(viewPos));
+		aWorld.updateProceduralFog();
+		sun.apply();
 		aWorld.draw();
 		
 		camera.selectUpdate();
@@ -34,7 +41,7 @@ int main()
 		updateModelMatrix(glm::vec3(0, 0, 0));
 
 		camera.selectDraw();
-		aWorld.drawDebug();
+		//aWorld.drawDebug();
 
 		aWorld.updateCurrentChunkPosition();
 		aWorld.unloadDistantChunks();
@@ -84,7 +91,11 @@ void initEnv()
 	//GL enable functions
 //	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_DEPTH_TEST);
+	glLineWidth(3.0f);
 //	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	//Gamma correction
+	//glEnable(GL_FRAMEBUFFER_SRGB);
 
 //	glEnable(GL_CULL_FACE);
 //	glCullFace(GL_BACK);
