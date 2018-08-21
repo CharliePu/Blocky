@@ -1,4 +1,5 @@
 #include "World.h"
+#include "Player.h"
 
 //Must delete afterward: create Camera.cpp
 extern Player camera;
@@ -117,6 +118,11 @@ void World::updateWorldLoop()
 		frontBufferLock.unlock();
 
 		currentRenderSize = i;
+		if (updateThreadShouldClose)
+		{
+			updateThreadShouldClose = false;
+			return;
+		}
 	}
 
 	while (!updateThreadShouldClose)
@@ -341,15 +347,25 @@ bool World::chunkInViewFrustrum(Chunk * const & chunk)
 {
 	static const float cutOff = glm::radians(90.0f);
 
-	if (std::abs(chunk->chunkX - currentChunkPosition->x) <= 1 ||
-		std::abs(chunk->chunkZ - currentChunkPosition->y) <= 1) return true;
+	if (std::abs(chunk->chunkX - currentChunkPosition->x) <= 1 &&
+		std::abs(chunk->chunkZ - currentChunkPosition->y) <= 1)
+		return true;
 
-	glm::vec2 chunkPos((chunk->chunkX + 0.5) * Chunk::sizeX, (chunk->chunkZ + 0.5) * Chunk::sizeX);
-	glm::vec2 chunkDir = glm::normalize(chunkPos - glm::vec2(camera.getPosition().x, camera.getPosition().z));
-	glm::vec2 cameraDir = glm::normalize(glm::vec2(-camera.getFront().x, -camera.getFront().z));
+	glm::vec3 chunkPos((chunk->chunkX + 0.5) * Chunk::sizeX, Chunk::sizeY / 2,(chunk->chunkZ + 0.5) * Chunk::sizeX);
+	glm::vec3 chunkDir = glm::normalize(chunkPos - camera.getPosition());
+	glm::vec3 cameraDir = glm::normalize(glm::vec3(-camera.getFront().x, camera.getFront().y, -camera.getFront().z));
 	float angle = std::acos(glm::dot(chunkDir, cameraDir));
 	if (angle < cutOff)
 		return true;
 	else
-		return false;
+	{
+		chunkPos = glm::vec3((chunk->chunkX + 0.5) * Chunk::sizeX, camera.getPosition().y, (chunk->chunkZ + 0.5) * Chunk::sizeX);
+		chunkDir = glm::normalize(chunkPos - camera.getPosition());
+		if (std::acos(glm::dot(chunkDir, cameraDir)) < cutOff)
+			return true;
+		else
+		{
+			return false;
+		}
+	}
 }

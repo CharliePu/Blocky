@@ -12,7 +12,6 @@ Chunk::Chunk(Chunk::PosVec position) :
 //must be called under main thread
 Chunk::~Chunk()
 {
-	//save();
 	glDeleteVertexArrays(1, &vao);
 	glDeleteVertexArrays(1, &debugVao);
 	glDeleteBuffers(1, &vbo);
@@ -103,7 +102,7 @@ void Chunk::update()
 void Chunk::save()
 {
 	std::ofstream chunkFile;
-	chunkFile.open("Saves\\chunk" + std::to_string(chunkX) + "," + std::to_string(chunkZ) + ".dat", std::ios::out | std::ios::trunc | std::ios::binary);
+	chunkFile.open("saves\\chunk" + std::to_string(chunkX) + "," + std::to_string(chunkZ) + ".dat", std::ios::out | std::ios::trunc | std::ios::binary);
 	if (chunkFile.good())
 	{
 		for (const auto &i : data)

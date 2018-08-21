@@ -30,13 +30,17 @@ void Player::updateKeyCallback(GLFWwindow * window)
 			postPosition -= speed * up * deltaTime;
 		if (glfwGetKey(window, GLFW_KEY_SPACE))
 		{
+#ifdef _DEBUG
 			postPosition += speed * up * deltaTime;
+#else
 			if (fspeed == 0)
 			{
 				fspeed = 8;
 				postPosition += fspeed * up * deltaTime;
 			}
+#endif
 		}
+#ifndef _DEBUG
 		if (fspeed > -200)
 		{
 			fspeed -= 20 * deltaTime;
@@ -46,7 +50,7 @@ void Player::updateKeyCallback(GLFWwindow * window)
 			fspeed = -200;
 		}
 		postPosition.y += fspeed * deltaTime;
-
+#endif
 		if (position.y < -500)
 			postPosition.y = 500;
 

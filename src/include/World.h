@@ -6,7 +6,6 @@
 #include <unordered_map>
 
 #include "Chunk.h"
-#include "Player.h"
 #include "GLTexture.h"
 #include "GLShader.h"
 #include "ThreadSafeWrapper.hpp"
@@ -15,7 +14,14 @@
 class World
 {
 public:
-	static constexpr Chunk::Position renderSize = 10;
+
+	static constexpr Chunk::Position renderSize = 
+#ifdef _DEBUG
+		3
+#else
+		10
+#endif
+		;
 
 	World();
 
