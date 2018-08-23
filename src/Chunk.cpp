@@ -64,12 +64,8 @@ void Chunk::draw()
 		this->needBindBuffer = false;
 	}
 	glBindVertexArray(this->vao);
-	//air is ignored
-	for (auto i = decltype(Block::typeNum)(); i != Block::typeNum; ++i)
-	{
-		glBindTexture(GL_TEXTURE_2D, Texture::get(i));
-		glDrawArrays(GL_TRIANGLES, verticesOffset[i], verticesOffset[i + 1] - verticesOffset[i]);
-	}
+		Texture::get(Block::BEDROCK).use();
+		glDrawArrays(GL_TRIANGLES, 0, vertexBuffer.size());
 	glBindVertexArray(NULL);
 }
 
@@ -224,7 +220,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 	//each face ordered in anti-clockwise
 
 	Vertex temp;
-
+	Block::Type type = data[x][y][z];
 	//right
 	if (data[x + 1][y][z] == Block::Type::AIR)
 	{
@@ -232,7 +228,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		for (auto i = 0; i < 6; i++)
 		{
 
-			temp.texCoord = Block::vertexTexCoords[i];
+			temp.texCoord = Texture::getTextureAtlasCoords(type, Block::vertexTexCoords[i]);
 			temp.position = Block::vertexPositions[Block::vertexIndices[0][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
 			verticesGroups.push_back(temp);
 		}
@@ -244,7 +240,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		for (auto i = 0; i < 6; i++)
 		{
 			temp.position = Block::vertexPositions[Block::vertexIndices[1][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
-			temp.texCoord = Block::vertexTexCoords[i];
+			temp.texCoord = Texture::getTextureAtlasCoords(type, Block::vertexTexCoords[i]);
 			verticesGroups.push_back(temp);
 		}
 	}
@@ -255,7 +251,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		for (auto i = 0; i < 6; i++)
 		{
 			temp.position = Block::vertexPositions[Block::vertexIndices[2][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
-			temp.texCoord = Block::vertexTexCoords[i];
+			temp.texCoord = Texture::getTextureAtlasCoords(type, Block::vertexTexCoords[i]);
 			verticesGroups.push_back(temp);
 		}
 	}
@@ -266,7 +262,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		for (auto i = 0; i < 6; i++)
 		{
 			temp.position = Block::vertexPositions[Block::vertexIndices[3][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
-			temp.texCoord = Block::vertexTexCoords[i];
+			temp.texCoord = Texture::getTextureAtlasCoords(type, Block::vertexTexCoords[i]);
 			verticesGroups.push_back(temp);
 		}
 	}
@@ -277,7 +273,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		for (auto i = 0; i < 6; i++)
 		{
 			temp.position = Block::vertexPositions[Block::vertexIndices[4][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
-			temp.texCoord = Block::vertexTexCoords[i];
+			temp.texCoord = Texture::getTextureAtlasCoords(type, Block::vertexTexCoords[i]);
 			verticesGroups.push_back(temp);
 		}
 	}
@@ -288,7 +284,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		for (auto i = 0; i < 6; i++)
 		{
 			temp.position = Block::vertexPositions[Block::vertexIndices[5][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
-			temp.texCoord = Block::vertexTexCoords[i];
+			temp.texCoord = Texture::getTextureAtlasCoords(type, Block::vertexTexCoords[i]);
 			verticesGroups.push_back(temp);
 		}
 	}

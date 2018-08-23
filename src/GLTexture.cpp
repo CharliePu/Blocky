@@ -1,55 +1,61 @@
 #include "GLTexture.h"
 
-GLTexture::GLTexture(const std::string &path, const Type &type = GLTexture::Type::DIFFUSE_MAP)
+GLTexture::GLTexture()
 {
-	this->type = type;
-	//load image
+	glGenTextures(1, &this->id);
+}
+
+bool GLTexture::load(const std::string & path)
+{
 	int width, height, channel;
 	unsigned char* image = SOIL_load_image(path.c_str(), &width, &height, &channel, SOIL_LOAD_AUTO);
 	if (!image)
 	{
-		std::cerr << "Texture: Failed to load image" + path << std::endl;
-		return;
+		return false;
 	}
-
-	//bind texture
-	glGenTextures(1, &id);
 	glBindTexture(GL_TEXTURE_2D, id);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, (channel > 3 ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, image);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, NULL);
+	return true;
+}
+
+bool GLTexture::loadMipMap(const std::vector<std::string>& paths)
+{
+	std::vector<int> widths(paths.size()), heights(paths.size()), channels(paths.size());
+	std::vector<unsigned char*> images(paths.size());
+	for (size_t i = 0; i != paths.size(); ++i)
+	{
+		images[i] = SOIL_load_image(paths[i].c_str(), &widths[i], &heights[i], &channels[i], SOIL_LOAD_AUTO);
+		if (!images[i])
+		{
+			return false;
+		}
+	}
+	glBindTexture(GL_TEXTURE_2D, id);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, paths.size() - 1);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, (channel > 3 ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, image);
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-
-	//free data
-	SOIL_free_image_data(image);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	for (size_t i = 0; i != paths.size(); ++i)
+	{
+		glTexImage2D(GL_TEXTURE_2D, i, GL_RGBA, widths[i], heights[i], 0, (channels[i] > 3 ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, images[i]);
+	}
+	glBindTexture(GL_TEXTURE_2D, NULL);
+	return true;
 }
 
-GLTexture::GLTexture(std::vector<std::string> paths)
+void GLTexture::use()
 {
-	glGenTextures(1, &this->id);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, this->id);
-	int width, height;
-	unsigned char* image;
-	for (GLuint i = 0; i < 6; i++)
-	{
-		image = SOIL_load_image(paths[i].c_str(), &width, &height, 0, SOIL_LOAD_RGB);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-		SOIL_free_image_data(image);
-	}
-
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	glBindTexture(GL_TEXTURE_2D, id);
 }
 
 //y value is inversed, still subTexCoords should inversed y value
@@ -60,5 +66,5 @@ glm::vec2 GLTexture::getTextureAtlasCoords(const unsigned short & xNum, const un
 	GLushort yPos = subTextureID / xNum;
 	GLushort xPos = subTextureID % xNum;
 	//return glm::vec2(subTexCoords.x, subTexCoords.y+yInterval);
-	return glm::vec2((subTexCoords.x + xPos)*xInterval, (subTexCoords.y + yPos)*yInterval);
+	return glm::vec2((subTexCoords.x + xPos)*xInterval, (subTexCoords.y + yPos)*yInterval) + glm::vec2(1 - 2 * subTexCoords.x, 1 - 2* subTexCoords.y) * 0.001f;
 }

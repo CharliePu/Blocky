@@ -1,9 +1,43 @@
-﻿  World.cpp
+﻿  Chunk.cpp
+d:\projects\blocky - opengl\src\chunk.cpp(27): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(68): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(197): warning C4838: conversion from 'int' to 'GLfloat' requires a narrowing conversion
+d:\projects\blocky - opengl\src\chunk.cpp(162): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(163): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(165): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(166): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(168): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(169): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(171): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(172): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(174): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(175): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(177): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(178): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(180): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(181): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(183): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(184): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(186): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(187): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(189): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(190): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(192): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(193): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(195): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\projects\blocky - opengl\src\chunk.cpp(196): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+  GLTexture.cpp
+d:\projects\blocky - opengl\src\gltexture.cpp(42): warning C4267: 'argument': conversion from 'size_t' to 'GLint', possible loss of data
+d:\projects\blocky - opengl\src\gltexture.cpp(50): warning C4267: 'argument': conversion from 'size_t' to 'GLint', possible loss of data
+  Main.cpp
+  Player.cpp
+  Texture.cpp
+  World.cpp
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Generating code
-  14 of 1695 functions ( 0.8%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    10 functions had inline decision re-evaluated but remain unchanged
+  265 of 1825 functions (14.5%) were compiled, the rest were copied from previous compilation.
+    148 functions were new in current compilation
+    124 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
 Player.obj : warning LNK4049: locally defined symbol __glewGenBuffers imported
 Player.obj : warning LNK4049: locally defined symbol __glewGenVertexArrays imported

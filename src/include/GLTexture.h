@@ -12,33 +12,15 @@
 class GLTexture
 {
 public:
-	enum Type
-	{
-		DIFFUSE_MAP,
-		SPECULAR_MAP,
-		REFLECTION_MAP,
-		CUBE_MAP,
-		ATLAS
-	};
+	GLTexture();
 
-	Type type;
-	std::string path;
+	bool load(const std::string &path);
 
-	//load diffuse map or specular map
-	GLTexture(const std::string &path, const Type &type);
-	//load cube map
-	GLTexture(const std::vector<std::string> paths);
-	//do nothing
-	GLTexture() = default;
+	bool loadMipMap(const std::vector<std::string>& paths);
 
-	operator GLuint();
+	void use();
 
 	glm::vec2 static getTextureAtlasCoords(const unsigned short & xNum, const unsigned short & yNum, const unsigned short & subTextureID, const glm::vec2 &subTexCoords);
 private:
 	GLuint id;
 };
-
-inline GLTexture::operator GLuint()
-{
-	return id;
-}

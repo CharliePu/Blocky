@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\include\glm\detail\</FILEPATH>
+      <FILENAME>type_half.inl</FILENAME>
+      <LINE>51</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function may not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>glm::detail::uif32::{ctor}</FUNCTION>
+    <DECORATED>??0uif32@detail@glm@@QEAA@XZ</DECORATED>
+    <FUNCLINE>51</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\src\</FILEPATH>
+      <FILENAME>player.h</FILENAME>
+      <LINE>12</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function may not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>Player::{ctor}</FUNCTION>
+    <DECORATED>??0Player@@QEAA@XZ</DECORATED>
+    <FUNCLINE>12</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\src\</FILEPATH>
+      <FILENAME>player.h</FILENAME>
+      <LINE>12</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Player::selectBlock' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Player::{ctor}</FUNCTION>
+    <DECORATED>??0Player@@QEAA@XZ</DECORATED>
+    <FUNCLINE>12</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\src\</FILEPATH>
+      <FILENAME>player.h</FILENAME>
+      <LINE>12</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Player::selectFace' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Player::{ctor}</FUNCTION>
+    <DECORATED>??0Player@@QEAA@XZ</DECORATED>
+    <FUNCLINE>12</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\src\</FILEPATH>
+      <FILENAME>world.cpp</FILENAME>
+      <LINE>9</LINE>
+      <COLUMN>7</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function may not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>World::{ctor}</FUNCTION>
+    <DECORATED>??0World@@QEAA@XZ</DECORATED>
+    <FUNCLINE>9</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\src\</FILEPATH>
+      <FILENAME>world.cpp</FILENAME>
+      <LINE>190</LINE>
+      <COLUMN>11</COLUMN>
+    </SFA>
+    <DEFECTCODE>26444</DEFECTCODE>
+    <DESCRIPTION>Avoid unnamed objects with custom construction and destruction (es.84).</DESCRIPTION>
+    <FUNCTION>World::loadChunk::&lt;lambda_15eefb0712db9ac5a283ba8a0af3742e&gt;::()</FUNCTION>
+    <DECORATED>??R&lt;lambda_15eefb0712db9ac5a283ba8a0af3742e&gt;@@QEBAXXZ</DECORATED>
+    <FUNCLINE>191</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\src\</FILEPATH>
+      <FILENAME>world.cpp</FILENAME>
+      <LINE>196</LINE>
+      <COLUMN>29</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>World::loadChunk</FUNCTION>
+    <DECORATED>?loadChunk@World@@QEAAXU?$tvec2@H$0A@@glm@@@Z</DECORATED>
+    <FUNCLINE>172</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\src\</FILEPATH>
+      <FILENAME>world.cpp</FILENAME>
+      <LINE>196</LINE>
+      <COLUMN>54</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>World::loadChunk</FUNCTION>
+    <DECORATED>?loadChunk@World@@QEAAXU?$tvec2@H$0A@@glm@@@Z</DECORATED>
+    <FUNCLINE>172</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\src\include\</FILEPATH>
+      <FILENAME>threadsafewrapper.hpp</FILENAME>
+      <LINE>10</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function may not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>ThreadSafeWrapper&lt;glm::tvec2&lt;int,0&gt; &gt;::{ctor}</FUNCTION>
+    <DECORATED>??0?$ThreadSafeWrapper@U?$tvec2@H$0A@@glm@@@@QEAA@AEBU?$tvec2@H$0A@@glm@@@Z</DECORATED>
+    <FUNCLINE>10</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\src\include\</FILEPATH>
+      <FILENAME>threadsafewrapper.hpp</FILENAME>
+      <LINE>10</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function may not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>ThreadSafeWrapper&lt;std::unordered_map&lt;glm::tvec2&lt;int,0&gt;,Chunk *,World::KeyHasher,std::equal_to&lt;glm::tvec2&lt;int,0&gt; &gt;,std::allocator&lt;std::pair&lt;glm::tvec2&lt;int,0&gt; const ,Chunk *&gt; &gt; &gt; &gt;::{ctor}</FUNCTION>
+    <DECORATED>??0?$ThreadSafeWrapper@V?$unordered_map@U?$tvec2@H$0A@@glm@@PEAVChunk@@UKeyHasher@World@@U?$equal_to@U?$tvec2@H$0A@@glm@@@std@@V?$allocator@U?$pair@$$CBU?$tvec2@H$0A@@glm@@PEAVChunk@@@std@@@7@@std@@@@QEAA@AEBV?$unordered_map@U?$tvec2@H$0A@@glm@@PEAVChunk@@UKeyHasher@World@@U?$equal_to@U?$tvec2@H$0A@@glm@@@std@@V?$allocator@U?$pair@$$CBU?$tvec2@H$0A@@glm@@PEAVChunk@@@std@@@7@@std@@@Z</DECORATED>
+    <FUNCLINE>10</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\include\glm\detail\</FILEPATH>
+      <FILENAME>type_vec2.inl</FILENAME>
+      <LINE>35</LINE>
+      <COLUMN>34</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function may not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>glm::tvec2&lt;int,0&gt;::{ctor}</FUNCTION>
+    <DECORATED>??0?$tvec2@H$0A@@glm@@QEAA@XZ</DECORATED>
+    <FUNCLINE>35</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\include\glm\detail\</FILEPATH>
+      <FILENAME>type_vec3.inl</FILENAME>
+      <LINE>39</LINE>
+      <COLUMN>34</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function may not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>glm::tvec3&lt;__int64,0&gt;::{ctor}</FUNCTION>
+    <DECORATED>??0?$tvec3@_J$0A@@glm@@QEAA@XZ</DECORATED>
+    <FUNCLINE>39</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\projects\blocky - opengl\include\glm\detail\</FILEPATH>
+      <FILENAME>type_vec4.inl</FILENAME>
+      <LINE>39</LINE>
+      <COLUMN>34</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function may not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>glm::tvec4&lt;float,0&gt;::{ctor}</FUNCTION>
+    <DECORATED>??0?$tvec4@M$0A@@glm@@QEAA@XZ</DECORATED>
+    <FUNCLINE>39</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

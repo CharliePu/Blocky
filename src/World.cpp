@@ -152,7 +152,8 @@ void World::updateWorldLoop()
 			{
 				unloadBuffer.push_back(i);
 				//erase from chunkMap so renderer has no way to access it again before it is deleted
-				chunkMap.operateWriting([&]{
+				chunkMap.operateWriting([&]
+				{
 					chunkMap->erase(Chunk::PosVec(i->chunkX, i->chunkZ));
 				});
 				//reset to nullptr if currentChunk is going to be deleted
@@ -215,17 +216,14 @@ Chunk * const World::getCurrentChunk()
 			return currentChunk;
 
 	//Find chunk in chunkmap, if no found, use old value
-	//if (chunkMapLock.try_lock())
-	{
-		decltype(chunkMap->cend()) findCurrentChunk, chunkEnd;
-		chunkMap.operateReading([&] {
-			findCurrentChunk = chunkMap->find(currentChunkPosition);
-			chunkEnd = chunkMap->cend();
-		});
+	decltype(chunkMap->cend()) findCurrentChunk, chunkEnd;
+	chunkMap.operateReading([&] {
+		findCurrentChunk = chunkMap->find(currentChunkPosition);
+		chunkEnd = chunkMap->cend();
+	});
 
-		currentChunk = findCurrentChunk == chunkEnd ? currentChunk : (*findCurrentChunk).second;
-		//chunkMapLock.unlock();
-	}
+	currentChunk = findCurrentChunk == chunkEnd ? currentChunk : (*findCurrentChunk).second;
+
 	return currentChunk;
 }
 

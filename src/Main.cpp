@@ -15,6 +15,7 @@ int main()
 
 	aWorld.enableUpdateThread();
 
+
 	while (!glfwWindowShouldClose(window))
 	{
 		updateEnv();
