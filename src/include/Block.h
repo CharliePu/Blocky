@@ -32,6 +32,8 @@ struct Block
 		COBBLESTONE = 2,
 		GRASS = 3,
 		BEDROCK = 4,
+		SAND = 5,
+		WATER = 6,
 		NON_EXIST = 255
 	} Type;
 
@@ -45,5 +47,5 @@ struct Block
 		BACK
 	} Face;
 
-	static const unsigned short Block::typeNum = 5;
+	static const unsigned short Block::typeNum = 7;
 };

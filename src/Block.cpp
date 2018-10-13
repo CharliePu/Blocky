@@ -105,11 +105,10 @@ const glm::ivec3 Block::vertexNormals[6] =
 const glm::ivec2 Block::vertexTexCoords[6]
 {
 	//y-value has been inversed for adapting openGL texcord system
-	glm::vec2(0,0),
-	glm::vec2(0,1),
-	glm::vec2(1,1),
-	glm::vec2(1,1),
-	glm::vec2(1,0),
-	glm::vec2(0,0)
+	glm::ivec2(0,0),
+	glm::ivec2(0,1),
+	glm::ivec2(1,1),
+	glm::ivec2(1,1),
+	glm::ivec2(1,0),
+	glm::ivec2(0,0)
 };
-

@@ -20,16 +20,12 @@ void Texture::init(const std::string &path)
 		i = GLTexture();
 
 	textures[Block::Type::AIR];
-	textures[Block::Type::DIRT].load(path + "dirt.bmp");
+	textures[Block::Type::DIRT].load(path + "dirt.png");
 	textures[Block::Type::COBBLESTONE].load(path + "cobblestone.bmp");
 	textures[Block::Type::GRASS].load(path + "grass.bmp");
-	textures[Block::Type::BEDROCK].loadMipMap({ path + "atlas.png", 
-		path + "atlas-2x.png", 
-		path + "atlas-4x.png", 
-		path + "atlas-8x.png", 
-		path + "atlas-16x.png",
-		path + "atlas-32x.png",
-		path + "atlas-64x.png" });
+	textures[Block::Type::BEDROCK].load(path + "bedrock.bmp");
+	textures[Block::Type::SAND].load(path + "sand.png");
+	textures[Block::Type::WATER].load(path + "water.png");
 }
 
 GLTexture Texture::get(Block::Type type)

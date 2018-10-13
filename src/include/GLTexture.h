@@ -16,6 +16,8 @@ public:
 
 	bool load(const std::string &path);
 
+	bool loadMultipleAsTextureArray(const std::vector<std::string>& paths);
+
 	bool loadMipMap(const std::vector<std::string>& paths);
 
 	void use();

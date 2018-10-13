@@ -63,6 +63,6 @@ void main()
 
 	color = vec4(applyDirLight(vec3(color)), 1.0f);
 
-	color = applyLinearFog(applyFog(color));
+	color = applyFog(color);
 	//vec4(Normal.r*2+Normal.g*4+Normal.b*8)/40);
 }

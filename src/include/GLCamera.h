@@ -11,20 +11,21 @@
 class GLCamera
 {
 public:
-	typedef glm::vec3 PositionVec;
-	typedef glm::vec3 DirectionVec;
+	typedef double FloatType;
+	typedef glm::tvec3<FloatType, glm::highp> PositionVec;
+	typedef glm::tvec3<FloatType, glm::highp> DirectionVec;
 
 	GLCamera(
 		const PositionVec &position = PositionVec(0, 0, 0),
-		const float speed = 1.0f,
-		const float cursorSensitivity = 0.1f);
+		const FloatType speed = 1.0f,
+		const FloatType cursorSensitivity = 0.1f);
 	
 
 	void update(GLFWwindow * window);
 
 	inline const glm::mat4 &getViewMatrix();
-	inline const glm::vec3 &getFront();
-	inline const glm::vec3 getPosition();
+	inline const DirectionVec &getFront();
+	inline const PositionVec getPosition();
 protected:
 	//bug: front is reversed in direction
 	DirectionVec front;
@@ -32,7 +33,7 @@ protected:
 	DirectionVec right;
 	DirectionVec up;
 	glm::mat4 viewMatrix;
-	float speed, cursorSensitivity;
+	FloatType speed, cursorSensitivity;
 
 	virtual void updateKeyCallback(GLFWwindow * window);
 	virtual void updateCursorCallback(GLFWwindow * window);

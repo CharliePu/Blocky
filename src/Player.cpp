@@ -4,28 +4,25 @@ extern World aWorld;
 void Player::updateKeyCallback(GLFWwindow * window)
 {
 	// refresh deltatime
-	static float lastTime, currentTime;
-	float deltaTime;
+	static FloatType lastTime(0), currentTime(0), deltaTime(0);
 	lastTime = currentTime;
-	currentTime = (float)glfwGetTime();
+	currentTime = glfwGetTime();
 	deltaTime = currentTime - lastTime;
 
-
-	glm::vec3 postPosition = position;
+	PositionVec postPosition = position;
 	Chunk *currentChunk(aWorld.getCurrentChunk());
-
-	static float fspeed = 0;
+	static FloatType fspeed = 0;
 	if (currentChunk)
 	{
 		//Keyboardcallback
 		if (glfwGetKey(window, GLFW_KEY_W))
-			postPosition -= speed * deltaTime * glm::normalize(front * glm::vec3(1, 0, 1));
+			postPosition -= speed * deltaTime * glm::normalize(front * DirectionVec(1, 0, 1));
 		if (glfwGetKey(window, GLFW_KEY_S))
-			postPosition += speed * deltaTime * glm::normalize(front * glm::vec3(1, 0, 1));
+			postPosition += speed * deltaTime * glm::normalize(front * DirectionVec(1, 0, 1));
 		if (glfwGetKey(window, GLFW_KEY_A))
-			postPosition += speed * deltaTime * glm::normalize(right * glm::vec3(1, 0, 1));
+			postPosition += speed * deltaTime * glm::normalize(right * DirectionVec(1, 0, 1));
 		if (glfwGetKey(window, GLFW_KEY_D))
-			postPosition -= speed * deltaTime * glm::normalize(right * glm::vec3(1, 0, 1));
+			postPosition -= speed * deltaTime * glm::normalize(right * DirectionVec(1, 0, 1));
 		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT))
 			postPosition -= speed * up * deltaTime;
 		if (glfwGetKey(window, GLFW_KEY_SPACE))
@@ -60,7 +57,7 @@ void Player::updateKeyCallback(GLFWwindow * window)
 			DirectionVec displace(postPosition - position);
 			//if displace larger than one
 			if (glm::length(displace) > 1) {
-				float stepNum(glm::length(displace));
+				FloatType stepNum(glm::length(displace));
 				PositionVec temp(position);
 				DirectionVec unitStepVec(displace / stepNum);
 				//test for collision by every block between starting and ending point to avoid skipping when speed is fast
@@ -207,7 +204,7 @@ void Player::selectUpdate()
 	Block::GlobalPosVec truncPos;
 	for (auto i = 0.0f; i < selectRadius; i += 0.01f)
 	{
-		checkPos -= rayDir * 0.01f;
+		checkPos -= rayDir * 0.01;
 		truncPos = { 
 			static_cast<Block::GlobalPosition>(std::floor(checkPos.x)),
 			static_cast<Block::GlobalPosition>(std::floor(checkPos.y)),
@@ -255,11 +252,11 @@ bool Player::putBlockNearFace(const Block::GlobalPosVec & pos, const Block::Face
 
 Block::Face Player::getFace(const DirectionVec &point)
 {
-	float i;
+	FloatType i;
 	glm::vec3 internalPoint(
-		std::modf(point.x, &i),
-		std::modf(point.y, &i),
-		std::modf(point.z, &i)
+		static_cast<float>(std::modf(point.x, &i)),
+		static_cast<float>(std::modf(point.y, &i)),
+		static_cast<float>(std::modf(point.z, &i))
 	);
 
 	if (point.x < 0)
@@ -269,7 +266,7 @@ Block::Face Player::getFace(const DirectionVec &point)
 	if (point.z < 0)
 		internalPoint.z = 0 - internalPoint.z;
 
-	float d(INFINITY), dis;
+	FloatType d(INFINITY), dis;
 	Block::Face face;
 	for (size_t i = 0; i != 6; ++i)
 	{

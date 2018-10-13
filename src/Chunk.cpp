@@ -24,15 +24,16 @@ void Chunk::generate(Block::GlobalPosition noiseX, Block::GlobalPosition noiseZ)
 	for (Block::Position x = 0; x != Chunk::sizeX + 2; ++x)
 		for (Block::Position z = 0; z != Chunk::sizeZ + 2; ++z)
 		{
-			int h = (perlinNoise2D((noiseX + x) / 500.0f, (noiseZ + z) / 500.0f) + 1) * 200;
-				//(glm::simplex(glm::vec2((x + noiseX) / 500.0, (z + noiseZ) / 500.0)) + 1) * 20;
+			int h = static_cast<int>((perlinNoise2D((noiseX + x) / 500.0f, (noiseZ + z) / 500.0f) + 1) * 200
+				//(glm::simplex(glm::vec2((x + noiseX) / 50.0, (z + noiseZ) / 50.0)) + 1) * 20
+				);
 			for (Block::Position y = 0;
 				y < h;
 				++y)
 			{
 				data[x][y][z] = Block::Type::DIRT;
 			}
-			data[x][h][z] = Block::Type::GRASS;
+			data[x][h][z] = Block::Type::SAND;
 		}
 }
 
@@ -64,8 +65,11 @@ void Chunk::draw()
 		this->needBindBuffer = false;
 	}
 	glBindVertexArray(this->vao);
-		Texture::get(Block::BEDROCK).use();
-		glDrawArrays(GL_TRIANGLES, 0, vertexBuffer.size());
+		for (int i = 1; i != Block::typeNum; ++i)
+		{
+			Texture::get(i).use();
+			glDrawArrays(GL_TRIANGLES, verticesOffset[i], verticesOffset[i + 1] - verticesOffset[i]);
+		}
 	glBindVertexArray(NULL);
 }
 
@@ -227,9 +231,8 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		temp.normal = Block::vertexNormals[0];
 		for (auto i = 0; i < 6; i++)
 		{
-
-			temp.texCoord = Texture::getTextureAtlasCoords(type, Block::vertexTexCoords[i]);
 			temp.position = Block::vertexPositions[Block::vertexIndices[0][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
+			temp.texCoord = Block::vertexTexCoords[i];
 			verticesGroups.push_back(temp);
 		}
 	}
@@ -240,7 +243,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		for (auto i = 0; i < 6; i++)
 		{
 			temp.position = Block::vertexPositions[Block::vertexIndices[1][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
-			temp.texCoord = Texture::getTextureAtlasCoords(type, Block::vertexTexCoords[i]);
+			temp.texCoord = Block::vertexTexCoords[i];
 			verticesGroups.push_back(temp);
 		}
 	}
@@ -251,7 +254,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		for (auto i = 0; i < 6; i++)
 		{
 			temp.position = Block::vertexPositions[Block::vertexIndices[2][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
-			temp.texCoord = Texture::getTextureAtlasCoords(type, Block::vertexTexCoords[i]);
+			temp.texCoord = Block::vertexTexCoords[i];
 			verticesGroups.push_back(temp);
 		}
 	}
@@ -262,7 +265,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		for (auto i = 0; i < 6; i++)
 		{
 			temp.position = Block::vertexPositions[Block::vertexIndices[3][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
-			temp.texCoord = Texture::getTextureAtlasCoords(type, Block::vertexTexCoords[i]);
+			temp.texCoord = Block::vertexTexCoords[i];
 			verticesGroups.push_back(temp);
 		}
 	}
@@ -273,7 +276,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		for (auto i = 0; i < 6; i++)
 		{
 			temp.position = Block::vertexPositions[Block::vertexIndices[4][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
-			temp.texCoord = Texture::getTextureAtlasCoords(type, Block::vertexTexCoords[i]);
+			temp.texCoord = Block::vertexTexCoords[i];
 			verticesGroups.push_back(temp);
 		}
 	}
@@ -284,7 +287,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		for (auto i = 0; i < 6; i++)
 		{
 			temp.position = Block::vertexPositions[Block::vertexIndices[5][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
-			temp.texCoord = Texture::getTextureAtlasCoords(type, Block::vertexTexCoords[i]);
+			temp.texCoord = Block::vertexTexCoords[i];
 			verticesGroups.push_back(temp);
 		}
 	}

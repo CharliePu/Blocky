@@ -90,7 +90,7 @@ void initEnv()
 		std::cerr << "Failed to initialize GLEW" << std::endl;
 	}
 
-	glfwSwapInterval(0);
+	glfwSwapInterval(1);
 	//GL enable functions
 //	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_DEPTH_TEST);
@@ -106,7 +106,7 @@ void initEnv()
 	glClearColor(0.5f, 0.8f, 1.0f, 0.0f);
 
 	//init textures
-	Texture::init("..\\src\\resource\\");
+	Texture::init("..\\src\\resource\\src\\");
 }
 
 void updateEnv()

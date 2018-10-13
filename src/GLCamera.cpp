@@ -2,8 +2,8 @@
 
 GLCamera::GLCamera(
 	const GLCamera::PositionVec &position,
-	const float speed,
-	const float cursorSensitivity) :
+	const FloatType speed,
+	const FloatType cursorSensitivity) :
 	front(0, 0, 1), position(position), up(0, 1, 0),
 	speed(speed), cursorSensitivity(cursorSensitivity)
 {}
@@ -11,20 +11,20 @@ GLCamera::GLCamera(
 
 void GLCamera::updateKeyCallback(GLFWwindow * window)
 {
-	static float lastTime, currentTime;
-	float deltaTime;
+	static FloatType lastTime, currentTime;
+	FloatType deltaTime;
 	lastTime = currentTime;
-	currentTime = (float)glfwGetTime();
+	currentTime = glfwGetTime();
 	deltaTime = currentTime - lastTime;
 
 	if (glfwGetKey(window, GLFW_KEY_W))
-		position -= speed * deltaTime * glm::normalize(front * glm::vec3(1, 0, 1));
+		position -= speed * deltaTime * glm::normalize(front * DirectionVec(1, 0, 1));
 	if (glfwGetKey(window, GLFW_KEY_S))
-		position += speed * deltaTime * glm::normalize(front * glm::vec3(1, 0, 1));
+		position += speed * deltaTime * glm::normalize(front * DirectionVec(1, 0, 1));
 	if (glfwGetKey(window, GLFW_KEY_A))
-		position += speed * deltaTime * glm::normalize(right * glm::vec3(1, 0, 1));
+		position += speed * deltaTime * glm::normalize(right * DirectionVec(1, 0, 1));
 	if (glfwGetKey(window, GLFW_KEY_D))
-		position -= speed * deltaTime * glm::normalize(right * glm::vec3(1, 0, 1));
+		position -= speed * deltaTime * glm::normalize(right * DirectionVec(1, 0, 1));
 	if (glfwGetKey(window, GLFW_KEY_SPACE))
 		position += speed * up * deltaTime;
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT))
@@ -34,12 +34,12 @@ void GLCamera::updateKeyCallback(GLFWwindow * window)
 void GLCamera::updateCursorCallback(GLFWwindow * window)
 {
 	//compute cursor offset
-	static double lastCursorX, lastCursorY;
-	double cursorX, cursorY;
-	float cursorXOffset, cursorYOffset;
+	static FloatType lastCursorX, lastCursorY;
+	FloatType cursorX, cursorY;
+	FloatType cursorXOffset, cursorYOffset;
 	glfwGetCursorPos(window, &cursorX, &cursorY);
-	cursorXOffset = (float)(cursorX - lastCursorX);
-	cursorYOffset = (float)(lastCursorY - cursorY);
+	cursorXOffset = cursorX - lastCursorX;
+	cursorYOffset = lastCursorY - cursorY;
 	lastCursorX = cursorX;
 	lastCursorY = cursorY;
 
@@ -52,9 +52,9 @@ void GLCamera::updateCursorCallback(GLFWwindow * window)
 		cursorYOffset = 0;
 	}
 
-	static float yaw;
+	static FloatType yaw;
 	yaw += cursorXOffset*cursorSensitivity;
-	static float pitch;
+	static FloatType pitch;
 	pitch += cursorYOffset*cursorSensitivity;
 
 	if (pitch > 89.0f)
