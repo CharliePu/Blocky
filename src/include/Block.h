@@ -34,6 +34,8 @@ struct Block
 		BEDROCK = 4,
 		SAND = 5,
 		WATER = 6,
+		LEAVES = 7,
+		BARK = 8,
 		NON_EXIST = 255
 	} Type;
 
@@ -47,5 +49,5 @@ struct Block
 		BACK
 	} Face;
 
-	static const unsigned short Block::typeNum = 7;
+	static const unsigned short Block::typeNum = 9;
 };

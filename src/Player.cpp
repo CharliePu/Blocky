@@ -51,7 +51,9 @@ void Player::updateKeyCallback(GLFWwindow * window)
 		if (position.y < -500)
 			postPosition.y = 500;
 
+
 		//if position inside chunk boundry 
+#ifndef _DEBUG
 		if (position.y < Chunk::sizeY && position.y > 0)
 		{
 			DirectionVec displace(postPosition - position);
@@ -88,6 +90,7 @@ void Player::updateKeyCallback(GLFWwindow * window)
 			}
 		}
 		else
+#endif
 		{
 			//if position is too high or too low, do no collision check
 			position = postPosition;

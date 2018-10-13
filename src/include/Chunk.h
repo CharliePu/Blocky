@@ -4,10 +4,10 @@
 #include <fstream>
 #include <vector>
 #include <array>
+#include <random>
 
 #include <gl/glew.h>
 #include <GLFW/glfw3.h>
-#include <glm/gtc/noise.hpp>
 
 #include "Block.h"
 #include "Texture.h"

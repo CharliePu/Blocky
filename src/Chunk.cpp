@@ -20,20 +20,65 @@ Chunk::~Chunk()
 
 void Chunk::generate(Block::GlobalPosition noiseX, Block::GlobalPosition noiseZ)
 {
-	//(perlinNoise2D((noiseX + x - 1) / 20.0, (noiseZ + z - 1) / 20.0) + 1) * 50
+	static std::default_random_engine e;
+	static std::uniform_int_distribution<unsigned> u(10, 20);
+	static std::bernoulli_distribution treeShouldBeHere(0.001);
+
 	for (Block::Position x = 0; x != Chunk::sizeX + 2; ++x)
 		for (Block::Position z = 0; z != Chunk::sizeZ + 2; ++z)
 		{
-			int h = static_cast<int>((perlinNoise2D((noiseX + x) / 500.0f, (noiseZ + z) / 500.0f) + 1) * 200
+			Block::Position h = static_cast<int>((perlinNoise2D((noiseX + x - 1) / 200.0f, (noiseZ + z - 1) / 200.0f) + 1) * 100
 				//(glm::simplex(glm::vec2((x + noiseX) / 50.0, (z + noiseZ) / 50.0)) + 1) * 20
 				);
+			//Block::Position h = std::abs(noiseX + x);
 			for (Block::Position y = 0;
-				y < h;
+				y != h;
 				++y)
 			{
-				data[x][y][z] = Block::Type::DIRT;
+				if (y < 64)
+					data[x][y][z] = Block::Type::SAND;
+				else
+					data[x][y][z] = Block::Type::DIRT;
 			}
-			data[x][h][z] = Block::Type::SAND;
+			if (h < 64)
+			{
+				data[x][h++][z] = Block::Type::SAND;
+				for (Block::Position y = h; y < 62; ++y)
+					data[x][y][z] = Block::Type::WATER;
+			}
+			else
+			{
+				data[x][h][z] = Block::Type::GRASS;
+			}
+			
+			if (h > 64)
+			{
+				if (x != 0 && x != Chunk::sizeX + 1 && z != 0 && z != Chunk::sizeZ + 1 && treeShouldBeHere(e))
+				{
+					data[x][h + 1][z] = Block::Type::BARK;
+					data[x][h + 2][z] = Block::Type::BARK;
+					data[x][h + 3][z] = Block::Type::BARK;
+					data[x][h + 4][z] = Block::Type::BARK;
+					data[x][h + 5][z] = Block::Type::BARK;
+					data[x][h + 6][z] = Block::Type::BARK;
+					data[x - 1][h + 4][z] = Block::Type::LEAVES;
+					data[x + 1][h + 4][z] = Block::Type::LEAVES;
+					data[x][h + 4][z - 1] = Block::Type::LEAVES;
+					data[x][h + 4][z + 1] = Block::Type::LEAVES;
+					data[x - 1][h + 4][z - 1] = Block::Type::LEAVES;
+					data[x - 1][h + 4][z + 1] = Block::Type::LEAVES;
+					data[x + 1][h + 4][z - 1] = Block::Type::LEAVES;
+					data[x + 1][h + 4][z + 1] = Block::Type::LEAVES;
+					data[x - 1][h + 5][z] = Block::Type::LEAVES;
+					data[x + 1][h + 5][z] = Block::Type::LEAVES;
+					data[x][h + 5][z - 1] = Block::Type::LEAVES;
+					data[x][h + 5][z + 1] = Block::Type::LEAVES;
+					data[x - 1][h + 5][z - 1] = Block::Type::LEAVES;
+					data[x - 1][h + 5][z + 1] = Block::Type::LEAVES;
+					data[x + 1][h + 5][z - 1] = Block::Type::LEAVES;
+					data[x + 1][h + 5][z + 1] = Block::Type::LEAVES;
+				}
+			}
 		}
 }
 

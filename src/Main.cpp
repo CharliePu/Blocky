@@ -106,7 +106,7 @@ void initEnv()
 	glClearColor(0.5f, 0.8f, 1.0f, 0.0f);
 
 	//init textures
-	Texture::init("..\\src\\resource\\src\\");
+	Texture::init("..\\src\\resource\\");
 }
 
 void updateEnv()

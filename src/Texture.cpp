@@ -22,10 +22,12 @@ void Texture::init(const std::string &path)
 	textures[Block::Type::AIR];
 	textures[Block::Type::DIRT].load(path + "dirt.png");
 	textures[Block::Type::COBBLESTONE].load(path + "cobblestone.bmp");
-	textures[Block::Type::GRASS].load(path + "grass.bmp");
+	textures[Block::Type::GRASS].load(path + "grass.png");
 	textures[Block::Type::BEDROCK].load(path + "bedrock.bmp");
 	textures[Block::Type::SAND].load(path + "sand.png");
 	textures[Block::Type::WATER].load(path + "water.png");
+	textures[Block::Type::LEAVES].load(path + "leaves.png");
+	textures[Block::Type::BARK].load(path + "bark.png");
 }
 
 GLTexture Texture::get(Block::Type type)
