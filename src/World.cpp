@@ -40,6 +40,12 @@ void World::draw()
 			i->draw();
 	}
 	frontBufferLock.unlock();
+
+}
+
+void World::drawBlend()
+{
+	
 }
 
 void World::drawDebug()
@@ -267,7 +273,7 @@ Block::Type World::getBlock(const Block::GlobalPosVec &pos)
 	if (block)
 		return *block;
 	else
-		return Block::AIR;
+		return Block::Type::AIR;
 }
 
 //return success or not
@@ -345,7 +351,7 @@ void World::updateChunksForBlock(const Block::GlobalPosVec & pos)
 //cull chunks before rendering
 bool World::chunkInViewFrustrum(Chunk * const & chunk)
 {
-	static const float cutOff = glm::radians(90.0f);
+	static const double cutOff = glm::radians(90.0f);
 
 	if (std::abs(chunk->chunkX - currentChunkPosition->x) <= 1 &&
 		std::abs(chunk->chunkZ - currentChunkPosition->y) <= 1)
@@ -354,7 +360,7 @@ bool World::chunkInViewFrustrum(Chunk * const & chunk)
 	Player::PositionVec chunkPos((chunk->chunkX + 0.5) * Chunk::sizeX, Chunk::sizeY / 2,(chunk->chunkZ + 0.5) * Chunk::sizeX);
 	Player::DirectionVec chunkDir = glm::normalize(chunkPos - camera.getPosition());
 	Player::DirectionVec cameraDir = glm::normalize(glm::vec3(-camera.getFront().x, camera.getFront().y, -camera.getFront().z));
-	float angle = std::acos(glm::dot(chunkDir, cameraDir));
+	double angle = std::acos(glm::dot(chunkDir, cameraDir));
 	if (angle < cutOff)
 		return true;
 	else

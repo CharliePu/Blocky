@@ -1,34 +1,6 @@
-﻿  Chunk.cpp
-d:\codings\c++\blocky\src\chunk.cpp(246): warning C4838: conversion from 'int' to 'GLfloat' requires a narrowing conversion
-d:\codings\c++\blocky\src\chunk.cpp(211): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(212): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(214): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(215): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(217): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(218): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(220): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(221): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(223): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(224): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(226): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(227): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(229): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(230): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(232): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(233): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(235): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(236): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(238): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(239): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(241): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(242): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(244): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(245): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-  GLTexture.cpp
-d:\codings\c++\blocky\src\gltexture.cpp(41): warning C4267: 'argument': conversion from 'size_t' to 'GLint', possible loss of data
-d:\codings\c++\blocky\src\gltexture.cpp(49): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-d:\codings\c++\blocky\src\gltexture.cpp(69): warning C4267: 'argument': conversion from 'size_t' to 'GLint', possible loss of data
-d:\codings\c++\blocky\src\gltexture.cpp(77): warning C4267: 'argument': conversion from 'size_t' to 'GLint', possible loss of data
+﻿  Main.cpp
+  Player.cpp
+  World.cpp
   Generating Code...
   SOIL.lib(SOIL.obj) : MSIL .netmodule or module compiled with /GL found; restarting link with /LTCG; add /LTCG to the link command line to improve linker performance
 LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification

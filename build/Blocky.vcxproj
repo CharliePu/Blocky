@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="..\src\include\GLFrameBuffer.hpp" />
     <ClInclude Include="..\src\include\Shadow.h" />
+    <ClInclude Include="..\src\include\Structures.h" />
     <ClInclude Include="..\src\include\ThreadSafeWrapper.hpp" />
     <ClInclude Include="..\src\Player.h" />
     <ClInclude Include="..\src\include\Block.h" />
@@ -46,6 +47,7 @@
     <ClCompile Include="..\src\GLShader.cpp" />
     <ClCompile Include="..\src\GLTexture.cpp" />
     <ClCompile Include="..\src\Shadow.cpp" />
+    <ClCompile Include="..\src\Structures.cpp" />
     <ClCompile Include="..\src\Texture.cpp" />
     <ClCompile Include="..\src\World.cpp" />
   </ItemGroup>

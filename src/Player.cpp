@@ -107,7 +107,7 @@ void Player::updateCursorCallback(GLFWwindow * window)
 		if (!lPressed)
 		{
 			lPressed = true;
-			if (aWorld.setBlock(selectPos, Block::AIR))
+			if (aWorld.setBlock(selectPos, Block::Type::AIR))
 			{
 				aWorld.getCurrentChunk()->update();
 			}
@@ -124,9 +124,9 @@ void Player::updateCursorCallback(GLFWwindow * window)
 		if (!rPressed)
 		{
 			rPressed = true;
-			if (selectBlock != Block::AIR)
+			if (selectBlock != Block::Type::AIR)
 			{
-				if (putBlockNearFace(selectPos, selectFace, Block::COBBLESTONE))
+				if (putBlockNearFace(selectPos, selectFace, Block::Type::COBBLESTONE))
 				{
 					aWorld.getCurrentChunk()->update();
 				}
@@ -146,9 +146,9 @@ bool Player::collide(Player::PositionVec &pos, const Player::DirectionVec &displ
 	bool state = false;
 	if (displace.y < 0)
 	{
-		if (aWorld.getBlock({ std::floor(pos.x),
+		if (!Block::isPermeableBlock(aWorld.getBlock({ std::floor(pos.x),
 			static_cast<Block::GlobalPosition>(std::floor(position.y + displace.y - height / 2)),
-			std::floor(position.z) }))
+			std::floor(position.z) })))
 		{
 			postPos.y = std::floor(position.y + displace.y - height / 2) + 1 + height / 2;
 			state = true;
@@ -156,9 +156,9 @@ bool Player::collide(Player::PositionVec &pos, const Player::DirectionVec &displ
 	}
 	if (displace.x < 0)
 	{
-		if (aWorld.getBlock({ static_cast<Block::GlobalPosition>(std::floor(position.x + displace.x - width / 2)),
+		if (!Block::isPermeableBlock(aWorld.getBlock({ static_cast<Block::GlobalPosition>(std::floor(position.x + displace.x - width / 2)),
 			std::floor(position.y),
-			std::floor(position.z) }))
+			std::floor(position.z) })))
 		{
 			postPos.x = std::floor(position.x + displace.x - width / 2) + 1 + width / 2;
 			state = true;
@@ -166,9 +166,9 @@ bool Player::collide(Player::PositionVec &pos, const Player::DirectionVec &displ
 	}
 	if (displace.x > 0)
 	{
-		if (aWorld.getBlock({ static_cast<Block::GlobalPosition>(std::floor(position.x + displace.x + width / 2)),
+		if (!Block::isPermeableBlock(aWorld.getBlock({ static_cast<Block::GlobalPosition>(std::floor(position.x + displace.x + width / 2)),
 			std::floor(position.y),
-			std::floor(position.z) }))
+			std::floor(position.z) })))
 		{
 			postPos.x = std::floor(position.x + displace.x + width / 2) - width / 2;
 			state = true;
@@ -176,10 +176,9 @@ bool Player::collide(Player::PositionVec &pos, const Player::DirectionVec &displ
 	}
 	if (displace.z < 0)
 	{
-		//auto temp = static_cast<size_t>(std::floor(localPosZ + displace.z - length / 2)) + 1;
-		if (aWorld.getBlock({ std::floor(position.x),
+		if (!Block::isPermeableBlock(aWorld.getBlock({ std::floor(position.x),
 			std::floor(position.y),
-			static_cast<Block::GlobalPosition>(std::floor(position.z + displace.z - length / 2)) }))
+			static_cast<Block::GlobalPosition>(std::floor(position.z + displace.z - length / 2)) })))
 		{
 			postPos.z = std::floor(position.z + displace.z - length / 2) + 1 + length / 2;
 			state = true;
@@ -187,9 +186,9 @@ bool Player::collide(Player::PositionVec &pos, const Player::DirectionVec &displ
 	}
 	if (displace.z > 0)
 	{
-		if (aWorld.getBlock({ std::floor(position.x),
+		if (!Block::isPermeableBlock(aWorld.getBlock({ std::floor(position.x),
 			std::floor(position.y),
-			static_cast<Block::GlobalPosition>(std::floor(position.z + displace.z + length / 2)) }))
+			static_cast<Block::GlobalPosition>(std::floor(position.z + displace.z + length / 2)) })))
 		{
 			postPos.z = std::floor(position.z + displace.z + length / 2) - length / 2;
 			state = true;
@@ -204,24 +203,23 @@ void Player::selectUpdate()
 {
 	DirectionVec rayDir(glm::normalize(front));
 	PositionVec checkPos(position + PositionVec(0, height / 2, 0));
-	Block::GlobalPosVec truncPos;
 	for (auto i = 0.0f; i < selectRadius; i += 0.01f)
 	{
 		checkPos -= rayDir * 0.01;
-		truncPos = { 
+		selectPos = { 
 			static_cast<Block::GlobalPosition>(std::floor(checkPos.x)),
 			static_cast<Block::GlobalPosition>(std::floor(checkPos.y)),
 			static_cast<Block::GlobalPosition>(std::floor(checkPos.z)) 
 		};
-		if (aWorld.getBlock(truncPos))
+
+		selectBlock = aWorld.getBlock(selectPos);
+		if (selectBlock != Block::Type::AIR && selectBlock != Block::Type::WATER)
 		{
 			break;
 		}
 	}
 
-	selectBlock = aWorld.getBlock(truncPos);
 	selectFace = getFace(checkPos);
-	selectPos = truncPos;
 }
 
 void Player::selectDraw()
@@ -244,7 +242,7 @@ void Player::selectDraw()
 	glBufferData(GL_ARRAY_BUFFER, buffer.size() * sizeof(glm::fvec3), &buffer[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::fvec3), NULL);
-	if (aWorld.getBlock(selectPos))
+	if (selectBlock != Block::Type::AIR && selectBlock != Block::Type::WATER)
 		glDrawArrays(GL_LINES, 0, 48);
 }
 

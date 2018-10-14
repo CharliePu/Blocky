@@ -66,6 +66,9 @@
     <ClInclude Include="..\src\include\Shadow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\include\Structures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Noise.cpp">
@@ -105,6 +108,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Shadow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Structures.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

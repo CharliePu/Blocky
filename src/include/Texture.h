@@ -12,6 +12,5 @@ namespace Texture
 	void init(const std::string &path);
 	
 	GLTexture get(Block::Type type);
-	GLTexture get(decltype(Block::typeNum) type);
 	glm::vec2 getTextureAtlasCoords(const unsigned short & subTextureID, const glm::vec2 & subTexCoords);
 };

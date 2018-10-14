@@ -1,34 +1,9 @@
-﻿  Chunk.cpp
-d:\codings\c++\blocky\src\chunk.cpp(246): warning C4838: conversion from 'int' to 'GLfloat' requires a narrowing conversion
-d:\codings\c++\blocky\src\chunk.cpp(211): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(212): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(214): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(215): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(217): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(218): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(220): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(221): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(223): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(224): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(226): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(227): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(229): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(230): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(232): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(233): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(235): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(236): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(238): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(239): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(241): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(242): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(244): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(245): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+﻿  Main.cpp
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Generating code
-  1 of 1707 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  2 of 1714 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
 Player.obj : warning LNK4049: locally defined symbol __glewGenBuffers imported
 Player.obj : warning LNK4049: locally defined symbol __glewGenVertexArrays imported

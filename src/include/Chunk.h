@@ -11,6 +11,7 @@
 
 #include "Block.h"
 #include "Texture.h"
+#include "Structures.h"
 
 class Chunk
 {
@@ -19,6 +20,7 @@ public:
 	static constexpr Block::Position sizeX = 32;
 	static constexpr Block::Position sizeY = 512;
 	static constexpr Block::Position sizeZ = 32;
+	static constexpr Block::Position bufferLength = 2;
 
 	typedef int Position;
 	typedef glm::ivec2 PosVec;
@@ -35,7 +37,7 @@ public:
 
 	Chunk::Position chunkX, chunkZ;
 
-	Block::Type data[Chunk::sizeX + 2][Chunk::sizeY + 2][Chunk::sizeZ + 2];
+	Block::Type data[Chunk::sizeX + bufferLength * 2][Chunk::sizeY + bufferLength * 2][Chunk::sizeZ + bufferLength * 2];
 	bool needBindBuffer;
 
 	static Block::PosVec toLocalPosition(const Block::GlobalPosVec &pos);
@@ -44,7 +46,7 @@ public:
 private:
 	GLuint vao, vbo, debugVao, debugVbo;
 	std::vector<Vertex> vertexBuffer;
-	std::array<GLsizei, Block::typeNum + 1> verticesOffset;
+	std::array<GLsizei, static_cast<int>(Block::Type::COUNT) + 1> verticesOffset;
 
 	void addBlockVertices(const Block::Position & x, const Block::Position & y, const Block::Position & z, std::vector<Vertex> &verticesGroups);
 };

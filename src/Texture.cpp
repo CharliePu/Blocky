@@ -1,6 +1,6 @@
 #include "Texture.h"
 
-std::array<GLTexture, Block::typeNum> textures;
+std::array<GLTexture, static_cast<size_t>(Block::Type::COUNT)> textures;
 
 void Texture::init(const std::string &path)
 {
@@ -16,28 +16,25 @@ void Texture::init(const std::string &path)
 		std::cerr << "ERROR: Texture::init() has been called more than once" << std::endl;
 		return;
 	}
+
+	//must initialize before use
 	for (auto &i : textures)
 		i = GLTexture();
 
-	textures[Block::Type::AIR];
-	textures[Block::Type::DIRT].load(path + "dirt.png");
-	textures[Block::Type::COBBLESTONE].load(path + "cobblestone.bmp");
-	textures[Block::Type::GRASS].load(path + "grass.png");
-	textures[Block::Type::BEDROCK].load(path + "bedrock.bmp");
-	textures[Block::Type::SAND].load(path + "sand.png");
-	textures[Block::Type::WATER].load(path + "water.png");
-	textures[Block::Type::LEAVES].load(path + "leaves.png");
-	textures[Block::Type::BARK].load(path + "bark.png");
+	textures[static_cast<size_t>(Block::Type::AIR)];
+	textures[static_cast<size_t>(Block::Type::DIRT)].load(path + "dirt.png");
+	textures[static_cast<size_t>(Block::Type::COBBLESTONE)].load(path + "cobblestone.bmp");
+	textures[static_cast<size_t>(Block::Type::GRASS)].load(path + "grass.png");
+	textures[static_cast<size_t>(Block::Type::BEDROCK)].load(path + "bedrock.bmp");
+	textures[static_cast<size_t>(Block::Type::SAND)].load(path + "sand.png");
+	textures[static_cast<size_t>(Block::Type::WATER)].load(path + "water.png");
+	textures[static_cast<size_t>(Block::Type::LEAVES)].load(path + "leaves.png");
+	textures[static_cast<size_t>(Block::Type::BARK)].load(path + "bark.png");
 }
 
 GLTexture Texture::get(Block::Type type)
 {
 	return textures[static_cast<size_t>(type)];
-}
-
-GLTexture Texture::get(decltype(Block::typeNum) type)
-{
-	return textures[static_cast<decltype(Block::typeNum)>(type)];
 }
 
 glm::vec2 Texture::getTextureAtlasCoords(const unsigned short & subTextureID, const glm::vec2 &subTexCoords)

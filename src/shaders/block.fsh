@@ -33,7 +33,7 @@ vec3 applyDirLight(vec3 color)
 
 	vec3 lightDir = normalize(-dirLight.direction);
 	float diff = max(dot(Normal, lightDir), 0.0);
-	vec3 diffuse = dirLight.diffuse * diff * color;
+	vec3 diffuse = dirLight.diffuse * diff * color * 0.7;
 
 	vec3 reflectDir = reflect(-lightDir, Normal);
 	float spec = pow(max(dot(normalize(cameraPos - fragPos), reflectDir), 0.0f),32);
@@ -61,8 +61,9 @@ void main()
 {
 	color = texture(texture_diffuse1,TexCoords);
 
-	color = vec4(applyDirLight(vec3(color)), 1.0f);
+	//color = vec4(applyDirLight(vec3(color)), 1.0f);
 
-	color = applyFog(color);
+	//color = applyFog(color);
+
 	//vec4(Normal.r*2+Normal.g*4+Normal.b*8)/40);
 }

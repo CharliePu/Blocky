@@ -29,6 +29,7 @@ public:
 
 	//render chunks
 	void draw();
+	void drawBlend();
 	void drawDebug();
 
 	void updateCurrentChunkPosition();
@@ -75,8 +76,6 @@ private:
 	std::atomic_bool updateThreadShouldClose;
 	Chunk::Position currentRenderSize;
 	void updateWorldLoop();
-	
-
 };
 
 inline bool World::chunkOutsideRenderZone(const Chunk& chunk, const Chunk::PosVec &centerChunkPosition, const int &renderSize)

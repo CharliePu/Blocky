@@ -22,28 +22,23 @@ void Chunk::generate(Block::GlobalPosition noiseX, Block::GlobalPosition noiseZ)
 {
 	static std::default_random_engine e;
 	static std::uniform_int_distribution<unsigned> u(10, 20);
-	static std::bernoulli_distribution treeShouldBeHere(0.001);
+	static std::bernoulli_distribution treeShouldBeHere(0.005);
 
-	for (Block::Position x = 0; x != Chunk::sizeX + 2; ++x)
-		for (Block::Position z = 0; z != Chunk::sizeZ + 2; ++z)
+	for (Block::Position x = 0; x != Chunk::sizeX + bufferLength * 2; ++x)
+		for (Block::Position z = 0; z != Chunk::sizeZ + bufferLength * 2; ++z)
 		{
-			Block::Position h = static_cast<int>((perlinNoise2D((noiseX + x - 1) / 200.0f, (noiseZ + z - 1) / 200.0f) + 1) * 100
-				//(glm::simplex(glm::vec2((x + noiseX) / 50.0, (z + noiseZ) / 50.0)) + 1) * 20
-				);
-			//Block::Position h = std::abs(noiseX + x);
-			for (Block::Position y = 0;
-				y != h;
-				++y)
+			Block::Position h = static_cast<int>((perlinNoise2D((noiseX + x) / 200.0f, (noiseZ + z) / 200.0f) + 1) * 200);
+			for (Block::Position y = 0; y != h; ++y)
 			{
-				if (y < 64)
+				if (y < 150)
 					data[x][y][z] = Block::Type::SAND;
 				else
 					data[x][y][z] = Block::Type::DIRT;
 			}
-			if (h < 64)
+			if (h < 147)
 			{
 				data[x][h++][z] = Block::Type::SAND;
-				for (Block::Position y = h; y < 62; ++y)
+				for (Block::Position y = h; y < 144; ++y)
 					data[x][y][z] = Block::Type::WATER;
 			}
 			else
@@ -51,9 +46,11 @@ void Chunk::generate(Block::GlobalPosition noiseX, Block::GlobalPosition noiseZ)
 				data[x][h][z] = Block::Type::GRASS;
 			}
 			
-			if (h > 64)
+			if (h > 150)
 			{
-				if (x != 0 && x != Chunk::sizeX + 1 && z != 0 && z != Chunk::sizeZ + 1 && treeShouldBeHere(e))
+				if (x > bufferLength - 1 + 2 && x < Chunk::sizeX + bufferLength - 3
+					&& z > bufferLength - 1 + 2 && z < Chunk::sizeZ + bufferLength - 3
+					&& treeShouldBeHere(e))
 				{
 					data[x][h + 1][z] = Block::Type::BARK;
 					data[x][h + 2][z] = Block::Type::BARK;
@@ -61,22 +58,9 @@ void Chunk::generate(Block::GlobalPosition noiseX, Block::GlobalPosition noiseZ)
 					data[x][h + 4][z] = Block::Type::BARK;
 					data[x][h + 5][z] = Block::Type::BARK;
 					data[x][h + 6][z] = Block::Type::BARK;
-					data[x - 1][h + 4][z] = Block::Type::LEAVES;
-					data[x + 1][h + 4][z] = Block::Type::LEAVES;
-					data[x][h + 4][z - 1] = Block::Type::LEAVES;
-					data[x][h + 4][z + 1] = Block::Type::LEAVES;
-					data[x - 1][h + 4][z - 1] = Block::Type::LEAVES;
-					data[x - 1][h + 4][z + 1] = Block::Type::LEAVES;
-					data[x + 1][h + 4][z - 1] = Block::Type::LEAVES;
-					data[x + 1][h + 4][z + 1] = Block::Type::LEAVES;
-					data[x - 1][h + 5][z] = Block::Type::LEAVES;
-					data[x + 1][h + 5][z] = Block::Type::LEAVES;
-					data[x][h + 5][z - 1] = Block::Type::LEAVES;
-					data[x][h + 5][z + 1] = Block::Type::LEAVES;
-					data[x - 1][h + 5][z - 1] = Block::Type::LEAVES;
-					data[x - 1][h + 5][z + 1] = Block::Type::LEAVES;
-					data[x + 1][h + 5][z - 1] = Block::Type::LEAVES;
-					data[x + 1][h + 5][z + 1] = Block::Type::LEAVES;
+
+					for (auto i : Tree::positions)
+						data[x + i.x][h + 5 + i.y][z + i.z] = Block::Type::LEAVES;
 				}
 			}
 		}
@@ -110,37 +94,43 @@ void Chunk::draw()
 		this->needBindBuffer = false;
 	}
 	glBindVertexArray(this->vao);
-		for (int i = 1; i != Block::typeNum; ++i)
-		{
-			Texture::get(i).use();
-			glDrawArrays(GL_TRIANGLES, verticesOffset[i], verticesOffset[i + 1] - verticesOffset[i]);
-		}
+		for (int i = 1; i != static_cast<int>(Block::Type::COUNT); ++i)
+			if (i != static_cast<int>(Block::Type::WATER))
+			{
+				Texture::get(static_cast<Block::Type>(i)).use();
+				glDrawArrays(GL_TRIANGLES, verticesOffset[i], verticesOffset[i + 1] - verticesOffset[i]);
+			}
+
+		//draw transparent at last
+		Texture::get(Block::Type::WATER).use();
+		glDrawArrays(GL_TRIANGLES, verticesOffset[static_cast<size_t>(Block::Type::WATER)], verticesOffset[static_cast<size_t>(Block::Type::WATER) + 1] - verticesOffset[static_cast<size_t>(Block::Type::WATER)]);
 	glBindVertexArray(NULL);
 }
 
 void Chunk::update()
 {
 	//Temporary vertex buffer
-	std::vector<Vertex> tempVertexBuffer[Block::typeNum]{};
+	std::vector<Vertex> tempVertexBuffer[static_cast<size_t>(Block::Type::COUNT)]{};
 
 	vertexBuffer.clear();
 
+	//std::cout << "go";
 	//add block vertices
-	for (Block::Position x = 1; x != Chunk::sizeX + 1; ++x)
-		for (Block::Position y = 1; y != Chunk::sizeY + 1; ++y)
-			for (Block::Position z = 1; z != Chunk::sizeZ + 1; ++z)
-				if (data[x][y][z])
+	for (Block::Position x = bufferLength; x != Chunk::sizeX + bufferLength; ++x)
+		for (Block::Position y = bufferLength; y != Chunk::sizeY + bufferLength; ++y)
+			for (Block::Position z = bufferLength; z != Chunk::sizeZ + bufferLength; ++z)
+				if (Block::isVisibleBlock(data[x][y][z]))
 				{
-					addBlockVertices(x, y, z, tempVertexBuffer[data[x][y][z]]);
+					addBlockVertices(x, y, z, tempVertexBuffer[static_cast<size_t>(data[x][y][z])]);
 				}
 
 	//combine vertices, ignore air
-	for (auto i = decltype(Block::typeNum)(1); i != Block::typeNum; ++i)
+	for (Block::TypeInt i = 0u; i != static_cast<Block::TypeInt>(Block::Type::COUNT); ++i)
 	{
 		vertexBuffer.insert(vertexBuffer.end(), tempVertexBuffer[i].begin(), tempVertexBuffer[i].end());
 		verticesOffset[i + 1] = static_cast<GLsizei>(vertexBuffer.size());
-	}
 
+	}
 	needBindBuffer = true;
 }
 
@@ -266,12 +256,19 @@ void Chunk::debug()
 void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y, const Block::Position &z, std::vector<Vertex> &verticesGroups)
 {
 	//cull adjacent faces
-	//each face ordered in anti-clockwise
+	//each face in anti-clockwise order
 
 	Vertex temp;
-	Block::Type type = data[x][y][z];
+	const Block::Type& type(data[x][y][z]), 
+		right(data[x + 1][y][z]), 
+		left(data[x - 1][y][z]), 
+		up(data[x][y + 1][z]), 
+		down(data[x][y - 1][z]),
+		front(data[x][y][z + 1]),
+		back(data[x][y][z - 1]);
+	
 	//right
-	if (data[x + 1][y][z] == Block::Type::AIR)
+	if (right == Block::Type::AIR || right == Block::Type::WATER && type != right)
 	{
 		temp.normal = Block::vertexNormals[0];
 		for (auto i = 0; i < 6; i++)
@@ -282,7 +279,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		}
 	}
 	//left
-	if (data[x - 1][y][z] == Block::Type::AIR)
+	if (left == Block::Type::AIR || left == Block::Type::WATER && type != left)
 	{
 		temp.normal = Block::vertexNormals[1];
 		for (auto i = 0; i < 6; i++)
@@ -293,7 +290,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		}
 	}
 	//up
-	if (data[x][y + 1][z] == Block::Type::AIR)
+	if (up == Block::Type::AIR || up == Block::Type::WATER && type != up)
 	{
 		temp.normal = Block::vertexNormals[2];
 		for (auto i = 0; i < 6; i++)
@@ -304,7 +301,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		}
 	}
 	//down
-	if (data[x][y - 1][z] == Block::Type::AIR)
+	if (down == Block::Type::AIR || down == Block::Type::WATER && type != down)
 	{
 		temp.normal = Block::vertexNormals[3];
 		for (auto i = 0; i < 6; i++)
@@ -315,7 +312,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		}
 	}
 	//front
-	if (data[x][y][z + 1] == Block::Type::AIR)
+	if (front == Block::Type::AIR || front == Block::Type::WATER && type != front)
 	{
 		temp.normal = Block::vertexNormals[4];
 		for (auto i = 0; i < 6; i++)
@@ -326,7 +323,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		}
 	}
 	//back
-	if (data[x][y][z - 1] == Block::Type::AIR)
+	if (back == Block::Type::AIR || back == Block::Type::WATER && type != back)
 	{
 		temp.normal = Block::vertexNormals[5];
 		for (auto i = 0; i < 6; i++)

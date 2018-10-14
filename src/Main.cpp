@@ -94,15 +94,19 @@ void initEnv()
 	//GL enable functions
 //	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_DEPTH_TEST);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	glLineWidth(3.0f);
-//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	//Gamma correction
 	//glEnable(GL_FRAMEBUFFER_SRGB);
 
-//	glEnable(GL_CULL_FACE);
-//	glCullFace(GL_BACK);
-//	glDepthFunc(GL_LEQUAL);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+
 	glClearColor(0.5f, 0.8f, 1.0f, 0.0f);
 
 	//init textures
