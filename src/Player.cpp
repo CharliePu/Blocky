@@ -38,13 +38,20 @@ void Player::updateKeyCallback(GLFWwindow * window)
 #endif
 		}
 #ifndef _DEBUG
-		if (fspeed > -200)
+		if (aWorld.getBlock(position) == Block::Type::WATER)
 		{
-			fspeed -= 20 * deltaTime;
+			fspeed += 10 * deltaTime;
 		}
 		else
 		{
-			fspeed = -200;
+			if (fspeed > -200)
+			{
+				fspeed -= 20 * deltaTime;
+			}
+			else
+			{
+				fspeed = -200;
+			}
 		}
 		postPosition.y += fspeed * deltaTime;
 #endif
@@ -109,7 +116,7 @@ void Player::updateCursorCallback(GLFWwindow * window)
 			lPressed = true;
 			if (aWorld.setBlock(selectPos, Block::Type::AIR))
 			{
-				aWorld.getCurrentChunk()->update();
+				aWorld.getCurrentChunk()->updateVertices();
 			}
 		}
 	}
@@ -128,7 +135,7 @@ void Player::updateCursorCallback(GLFWwindow * window)
 			{
 				if (putBlockNearFace(selectPos, selectFace, Block::Type::COBBLESTONE))
 				{
-					aWorld.getCurrentChunk()->update();
+					aWorld.getCurrentChunk()->updateVertices();
 				}
 			}
 		}

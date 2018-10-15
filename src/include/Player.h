@@ -1,4 +1,5 @@
 #pragma once
+
 #include <math.h>
 
 #include "World.h"
@@ -24,7 +25,7 @@ public:
 	void selectUpdate();
 	void selectDraw();
 	bool putBlockNearFace(const Block::GlobalPosVec & pos, const Block::Face face, const Block::Type type);
-	
+
 private:
 	void updateKeyCallback(GLFWwindow * window) override;
 	void updateCursorCallback(GLFWwindow * window) override;

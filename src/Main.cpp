@@ -2,7 +2,7 @@
 GLFWwindow* window;
 int windowWidth, windowHeight;
 World aWorld;
-Player camera;
+Player player;
 GLLighting::DirectionLight sun;
 
 
@@ -19,29 +19,30 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		updateEnv();
-		camera.update(window);
+		player.update(window);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		shader.use();
 		updateProjectionMatrix(45, windowWidth / (double)windowHeight, 0.1, 100000);
-		updateViewMatrix(camera.getPosition(), camera.getViewMatrix());
+		updateViewMatrix(player.getPosition(), player.getViewMatrix());
 		updateModelMatrix(glm::vec3(0, 0, 0));
-		glm::vec3 viewDir = -glm::normalize(camera.getFront());
+		glm::vec3 viewDir = -glm::normalize(player.getFront());
 		glUniform3fv(getUniformLocation("cameraDir"), 1, glm::value_ptr(viewDir));
-		glm::vec3 viewPos = camera.getPosition();
+		glm::vec3 viewPos = player.getPosition();
 		glUniform3fv(getUniformLocation("cameraPos"), 1, glm::value_ptr(viewPos));
 		aWorld.updateProceduralFog();
 		sun.apply();
+		aWorld.update();
 		aWorld.draw();
 		
-		camera.selectUpdate();
+		player.selectUpdate();
 
 		debugShader.use();
 		updateProjectionMatrix(45, windowWidth / (double)windowHeight, 0.1, 100000);
-		updateViewMatrix(camera.getPosition(), camera.getViewMatrix());
+		updateViewMatrix(player.getPosition(), player.getViewMatrix());
 		updateModelMatrix(glm::vec3(0, 0, 0));
 
-		camera.selectDraw();
+		player.selectDraw();
 
 #ifdef _DEBUG
 		aWorld.drawDebug();
@@ -90,7 +91,12 @@ void initEnv()
 		std::cerr << "Failed to initialize GLEW" << std::endl;
 	}
 
+#ifdef _DEBUG
+	glfwSwapInterval(0);
+#else
 	glfwSwapInterval(1);
+#endif // _DEBUG
+
 	//GL enable functions
 //	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_DEPTH_TEST);
@@ -143,9 +149,9 @@ void updateEnv()
 	}
 	glfwSetWindowTitle(window, ("Blocky FPS:" + std::to_string(FPS) + 
 		"CurrentChunk[" + std::to_string(chunkX) + ", " + std::to_string(chunkZ) + 
-		"] Camera[" + std::to_string(camera.getPosition().x) +
-		", " + std::to_string(camera.getPosition().y) +
-		", " + std::to_string(camera.getPosition().z)).c_str());
+		"] Camera[" + std::to_string(player.getPosition().x) +
+		", " + std::to_string(player.getPosition().y) +
+		", " + std::to_string(player.getPosition().z)).c_str());
 }
 
 void updateWindowKeyCallback()

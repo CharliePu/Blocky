@@ -4,6 +4,7 @@
 #include <mutex>
 #include <atomic>
 #include <unordered_map>
+#include <set>
 
 #include "Chunk.h"
 #include "GLTexture.h"
@@ -29,6 +30,7 @@ public:
 
 	//render chunks
 	void draw();
+	void update();
 	void drawBlend();
 	void drawDebug();
 
@@ -40,19 +42,29 @@ public:
 	void disableUpdateThread();
 
 	//Utility functions
-	Chunk * const getCurrentChunk();	
+	Chunk * const getCurrentChunk();
 	void loadChunk(Chunk::PosVec position);
 	bool chunkOutsideRenderZone(const Chunk &chunk, const Chunk::PosVec &centerChunkPosition, const int &renderSize);
-	
+
 	Block::Type getBlock(const Block::GlobalPosVec &pos);
 	Block::Type *findBlock(const Block::GlobalPosVec pos);
 	bool setBlock(const Block::GlobalPosVec &pos, const Block::Type &type);
 	void updateChunksForBlock(const Block::GlobalPosVec &pos);
 	bool chunkInViewFrustrum(Chunk * const &chunk);
 private:
+/*
+	struct ChunkDistanceCmp
+	{
+		bool operator()(Chunk* lhs, Chunk* rhs)
+		{
+			return lhs->distanceToPlayer > rhs->distanceToPlayer;
+		};
+	};*/
 
 	std::vector<Chunk*> frontDrawBuffer, backDrawBuffer;
 	std::list<Chunk*> unloadBuffer;
+
+	//std::set<Chunk*, ChunkDistanceCmp> orderedBuffer;
 
 	std::mutex frontBufferLock, unloadBufferLock, chunkMapLock;
 

@@ -2,7 +2,7 @@
 #include "Player.h"
 
 //Must delete afterward: create Camera.cpp
-extern Player camera;
+extern Player player;
 
 
 //Must initialize after GL is set up.
@@ -28,7 +28,6 @@ void World::removeAll()
 	}
 }
 
-
 void World::draw()
 {
 	frontBufferLock.lock();
@@ -39,8 +38,25 @@ void World::draw()
 #endif
 			i->draw();
 	}
+
+	glDepthMask(GL_FALSE);
+	for (auto i : frontDrawBuffer)
+	{
+		i->drawBlend();
+	}
+	glDepthMask(GL_TRUE);
 	frontBufferLock.unlock();
 
+}
+
+void World::update()
+{
+	//frontBufferLock.lock();
+	//for (auto i : frontDrawBuffer)
+	//{
+	//	i->updateProperties();
+	//}
+	//frontBufferLock.unlock();
 }
 
 void World::drawBlend()
@@ -60,7 +76,7 @@ void World::drawDebug()
 
 void World::updateCurrentChunkPosition()
 {
-	currentChunkPosition.set(glm::ivec2(std::floor((camera.getPosition().x) / Chunk::sizeX), std::floor((camera.getPosition().z) / Chunk::sizeZ)));
+	currentChunkPosition.set(glm::ivec2(std::floor((player.getPosition().x) / Chunk::sizeX), std::floor((player.getPosition().z) / Chunk::sizeZ)));
 }
 
 void World::unloadDistantChunks()
@@ -204,7 +220,7 @@ void World::loadChunk(Chunk::PosVec position)
 		{
 			chunk->generate(position.x*Chunk::sizeX, position.y*Chunk::sizeZ);
 		}
-		chunk->update();
+		chunk->updateVertices();
 	}
 	else
 	{
@@ -212,6 +228,7 @@ void World::loadChunk(Chunk::PosVec position)
 	}
 	backDrawBuffer.push_back(chunk);
 }
+
 
 Chunk * const World::getCurrentChunk()
 {
@@ -276,7 +293,6 @@ Block::Type World::getBlock(const Block::GlobalPosVec &pos)
 		return Block::Type::AIR;
 }
 
-//return success or not
 bool World::setBlock(const Block::GlobalPosVec &pos, const Block::Type &type)
 {
 	Block::Type *block = findBlock(pos);
@@ -297,13 +313,13 @@ void World::updateChunksForBlock(const Block::GlobalPosVec & pos)
 		findChunk = chunkMap->find(Chunk::toChunkPosition(pos));
 		if (findChunk == chunkMap->end())
 		{
-			std::cerr << "UpdateChunkForBlock(GlobalPosVec): Chunk no exist" << std::endl;
+			std::cerr << "UpdateChunkForBlock(GlobalPosVec): Chunk not exist" << std::endl;
 			return;
 		}
 	});
 
 	Chunk * const &chunk = findChunk->second;
-	chunk->update();
+	chunk->updateVertices();
 	chunkMap.operateReading([&] 
 	{
 		auto chunkNotFound = chunkMap->end();
@@ -314,7 +330,7 @@ void World::updateChunksForBlock(const Block::GlobalPosVec & pos)
 			if (aChunk != chunkNotFound)
 			{
 				aChunk->second->data[Chunk::sizeX + 1][localPos.y][localPos.z + 1] = blockType;
-				aChunk->second->update();
+				aChunk->second->updateVertices();
 			}
 		}
 		if (localPos.x == Chunk::sizeX - 1)
@@ -323,7 +339,7 @@ void World::updateChunksForBlock(const Block::GlobalPosVec & pos)
 			if (aChunk != chunkNotFound)
 			{
 				aChunk->second->data[0][localPos.y][localPos.z + 1] = blockType;
-				aChunk->second->update();
+				aChunk->second->updateVertices();
 			}
 		}
 		if (localPos.z == 0)
@@ -332,7 +348,7 @@ void World::updateChunksForBlock(const Block::GlobalPosVec & pos)
 			if (aChunk != chunkNotFound)
 			{
 				aChunk->second->data[localPos.x + 1][localPos.y][Chunk::sizeX + 1] = blockType;
-				aChunk->second->update();
+				aChunk->second->updateVertices();
 			}
 		}
 		if (localPos.z == Chunk::sizeZ - 1)
@@ -341,7 +357,7 @@ void World::updateChunksForBlock(const Block::GlobalPosVec & pos)
 			if (aChunk != chunkNotFound)
 			{
 				aChunk->second->data[localPos.x + 1][localPos.y][0] = blockType;
-				aChunk->second->update();
+				aChunk->second->updateVertices();
 			}
 		}
 	}
@@ -357,16 +373,16 @@ bool World::chunkInViewFrustrum(Chunk * const & chunk)
 		std::abs(chunk->chunkZ - currentChunkPosition->y) <= 1)
 		return true;
 
-	Player::PositionVec chunkPos((chunk->chunkX + 0.5) * Chunk::sizeX, Chunk::sizeY / 2,(chunk->chunkZ + 0.5) * Chunk::sizeX);
-	Player::DirectionVec chunkDir = glm::normalize(chunkPos - camera.getPosition());
-	Player::DirectionVec cameraDir = glm::normalize(glm::vec3(-camera.getFront().x, camera.getFront().y, -camera.getFront().z));
+	Player::PositionVec chunkPos(chunk->x, Chunk::sizeY / 2, chunk->z);
+	Player::DirectionVec chunkDir = glm::normalize(chunkPos - player.getPosition());
+	Player::DirectionVec cameraDir = glm::normalize(glm::vec3(-player.getFront().x, player.getFront().y, -player.getFront().z));
 	double angle = std::acos(glm::dot(chunkDir, cameraDir));
 	if (angle < cutOff)
 		return true;
 	else
 	{
-		chunkPos = glm::vec3((chunk->chunkX + 0.5) * Chunk::sizeX, camera.getPosition().y, (chunk->chunkZ + 0.5) * Chunk::sizeX);
-		chunkDir = glm::normalize(chunkPos - camera.getPosition());
+		chunkPos = glm::vec3((chunk->chunkX + 0.5) * Chunk::sizeX, player.getPosition().y, (chunk->chunkZ + 0.5) * Chunk::sizeX);
+		chunkDir = glm::normalize(chunkPos - player.getPosition());
 		if (std::acos(glm::dot(chunkDir, cameraDir)) < cutOff)
 			return true;
 		else

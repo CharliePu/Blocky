@@ -1,9 +1,15 @@
 #include "Chunk.h"
+#include "Player.h"
 #include "include/Noise.h"
+
+extern Player player;
 
 Chunk::Chunk(Chunk::PosVec position) :
 	chunkX(position.x), chunkZ(position.y),
-	needBindBuffer(true), 
+	x((chunkX + 0.5) * Chunk::sizeX), 
+	z((chunkZ + 0.5) * Chunk::sizeX),
+	distanceToPlayer(0),
+	needPrepare(true), 
 	vao(0), vbo(0),
 	debugVao(0), debugVbo(0),
 	vertexBuffer(), verticesOffset(),
@@ -66,33 +72,38 @@ void Chunk::generate(Block::GlobalPosition noiseX, Block::GlobalPosition noiseZ)
 		}
 }
 
+void Chunk::prepare()
+{
+	//only apply vao for the first preparation
+	if (vao == NULL)
+	{
+		glGenVertexArrays(1, &this->vao);
+		glGenBuffers(1, &this->vbo);
+	}
+
+	glBindVertexArray(this->vao);
+	//bind and upload vertices data
+	glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+	glBufferData(GL_ARRAY_BUFFER, vertexBuffer.size() * sizeof(Vertex), &vertexBuffer[0], GL_STATIC_DRAW);
+	//set position
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
+	//set normal
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, normal));
+	//set texCoords
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texCoord));
+	glBindVertexArray(NULL);
+
+	needPrepare = false;
+}
+
 void Chunk::draw()
 {
-	if (this->needBindBuffer)
-	{
-		if (!this->vao)
-		{
-			glGenVertexArrays(1, &this->vao);
-			glGenBuffers(1, &this->vbo);
-		}
+	if (this->needPrepare)
+		prepare();
 
-		glBindVertexArray(this->vao);
-		//bind and upload vertices data
-		glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-		glBufferData(GL_ARRAY_BUFFER, vertexBuffer.size() * sizeof(Vertex), &vertexBuffer[0], GL_STATIC_DRAW);
-		//set position
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
-		//set normal
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, normal));
-		//set texCoords
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texCoord));
-		glBindVertexArray(NULL);
-
-		this->needBindBuffer = false;
-	}
 	glBindVertexArray(this->vao);
 		for (int i = 1; i != static_cast<int>(Block::Type::COUNT); ++i)
 			if (i != static_cast<int>(Block::Type::WATER))
@@ -100,38 +111,16 @@ void Chunk::draw()
 				Texture::get(static_cast<Block::Type>(i)).use();
 				glDrawArrays(GL_TRIANGLES, verticesOffset[i], verticesOffset[i + 1] - verticesOffset[i]);
 			}
-
-		//draw transparent at last
-		Texture::get(Block::Type::WATER).use();
-		glDrawArrays(GL_TRIANGLES, verticesOffset[static_cast<size_t>(Block::Type::WATER)], verticesOffset[static_cast<size_t>(Block::Type::WATER) + 1] - verticesOffset[static_cast<size_t>(Block::Type::WATER)]);
 	glBindVertexArray(NULL);
 }
 
-void Chunk::update()
+void Chunk::drawBlend()
 {
-	//Temporary vertex buffer
-	std::vector<Vertex> tempVertexBuffer[static_cast<size_t>(Block::Type::COUNT)]{};
-
-	vertexBuffer.clear();
-
-	//std::cout << "go";
-	//add block vertices
-	for (Block::Position x = bufferLength; x != Chunk::sizeX + bufferLength; ++x)
-		for (Block::Position y = bufferLength; y != Chunk::sizeY + bufferLength; ++y)
-			for (Block::Position z = bufferLength; z != Chunk::sizeZ + bufferLength; ++z)
-				if (Block::isVisibleBlock(data[x][y][z]))
-				{
-					addBlockVertices(x, y, z, tempVertexBuffer[static_cast<size_t>(data[x][y][z])]);
-				}
-
-	//combine vertices, ignore air
-	for (Block::TypeInt i = 0u; i != static_cast<Block::TypeInt>(Block::Type::COUNT); ++i)
-	{
-		vertexBuffer.insert(vertexBuffer.end(), tempVertexBuffer[i].begin(), tempVertexBuffer[i].end());
-		verticesOffset[i + 1] = static_cast<GLsizei>(vertexBuffer.size());
-
-	}
-	needBindBuffer = true;
+	glBindVertexArray(this->vao);
+	Texture::get(Block::Type::WATER).use();
+	glDrawArrays(GL_TRIANGLES, verticesOffset[static_cast<size_t>(Block::Type::WATER)], verticesOffset[static_cast<size_t>(Block::Type::WATER) + 1] - verticesOffset[static_cast<size_t>(Block::Type::WATER)]);
+	glDepthMask(GL_LESS);
+	glBindVertexArray(NULL);
 }
 
 void Chunk::save()
@@ -251,6 +240,40 @@ void Chunk::debug()
 	glBindVertexArray(this->debugVao);
 	glDrawArrays(GL_LINES, 0, 24);
 	glBindVertexArray(NULL);
+}
+
+void Chunk::updateVertices()
+{
+	//Temporary vertex buffer
+	std::vector<Vertex> tempVertexBuffer[static_cast<size_t>(Block::Type::COUNT)]{};
+
+	vertexBuffer.clear();
+
+	//std::cout << "go";
+	//add block vertices
+	for (Block::Position x = bufferLength; x != Chunk::sizeX + bufferLength; ++x)
+		for (Block::Position y = bufferLength; y != Chunk::sizeY + bufferLength; ++y)
+			for (Block::Position z = bufferLength; z != Chunk::sizeZ + bufferLength; ++z)
+				if (Block::isVisibleBlock(data[x][y][z]))
+				{
+					addBlockVertices(x, y, z, tempVertexBuffer[static_cast<size_t>(data[x][y][z])]);
+				}
+
+	//combine vertices, ignore air
+	for (Block::TypeInt i = 0u; i != static_cast<Block::TypeInt>(Block::Type::COUNT); ++i)
+	{
+		vertexBuffer.insert(vertexBuffer.end(), tempVertexBuffer[i].begin(), tempVertexBuffer[i].end());
+		verticesOffset[i + 1] = static_cast<GLsizei>(vertexBuffer.size());
+
+	}
+
+	needPrepare = true;
+}
+
+void Chunk::updateProperties()
+{
+	auto chunkPos = toChunkPosition(player.getPosition());
+	distanceToPlayer = glm::length(glm::vec2(chunkPos.x - x, chunkPos.y - z));
 }
 
 void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y, const Block::Position &z, std::vector<Vertex> &verticesGroups)

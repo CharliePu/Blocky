@@ -24,29 +24,33 @@ public:
 
 	typedef int Position;
 	typedef glm::ivec2 PosVec;
+	static Block::PosVec toLocalPosition(const Block::GlobalPosVec &pos);
+	static Chunk::PosVec toChunkPosition(const Block::GlobalPosVec &pos);
 
 	Chunk(Chunk::PosVec position);
 	~Chunk();
 
 	void generate(Block::GlobalPosition noiseX, Block::GlobalPosition noiseZ);
+	void prepare();
 	void draw();
-	void update();
+	void drawBlend();
+	void updateVertices();
+	void updateProperties();
 	void save();
 	bool load();
 	void debug();
 
 	Chunk::Position chunkX, chunkZ;
-
+	Block::GlobalPosition x, z;
+	double distanceToPlayer;
 	Block::Type data[Chunk::sizeX + bufferLength * 2][Chunk::sizeY + bufferLength * 2][Chunk::sizeZ + bufferLength * 2];
-	bool needBindBuffer;
-
-	static Block::PosVec toLocalPosition(const Block::GlobalPosVec &pos);
-	static Chunk::PosVec toChunkPosition(const Block::GlobalPosVec &pos);
-
 private:
 	GLuint vao, vbo, debugVao, debugVbo;
 	std::vector<Vertex> vertexBuffer;
 	std::array<GLsizei, static_cast<int>(Block::Type::COUNT) + 1> verticesOffset;
+
+	bool needPrepare;
+
 
 	void addBlockVertices(const Block::Position & x, const Block::Position & y, const Block::Position & z, std::vector<Vertex> &verticesGroups);
 };

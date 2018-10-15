@@ -61,7 +61,7 @@ void main()
 {
 	color = texture(texture_diffuse1,TexCoords);
 
-	//color = vec4(applyDirLight(vec3(color)), 1.0f);
+	color = vec4(applyDirLight(vec3(color)), color.w);
 
 	//color = applyFog(color);
 
