@@ -91,11 +91,8 @@ void initEnv()
 		std::cerr << "Failed to initialize GLEW" << std::endl;
 	}
 
-#ifdef _DEBUG
-	glfwSwapInterval(0);
-#else
+
 	glfwSwapInterval(1);
-#endif // _DEBUG
 
 	//GL enable functions
 //	glEnable(GL_MULTISAMPLE);

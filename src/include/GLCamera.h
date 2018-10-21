@@ -17,7 +17,7 @@ public:
 
 	GLCamera(
 		const PositionVec &position = PositionVec(0, 0, 0),
-		const FloatType speed = 1.0f,
+		const FloatType speed = 0.1f,
 		const FloatType cursorSensitivity = 0.1f);
 	
 

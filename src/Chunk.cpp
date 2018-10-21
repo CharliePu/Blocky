@@ -96,6 +96,10 @@ void Chunk::prepare()
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texCoord));
 	glBindVertexArray(NULL);
 
+	//free memory
+	vertexBuffer.clear();
+	vertexBuffer.shrink_to_fit();
+
 	needPrepare = false;
 }
 
@@ -249,7 +253,6 @@ void Chunk::updateVertices()
 
 	vertexBuffer.clear();
 
-	//std::cout << "go";
 	//add block vertices
 	for (Block::Position x = bufferLength; x != Chunk::sizeX + bufferLength; ++x)
 		for (Block::Position y = bufferLength; y != Chunk::sizeY + bufferLength; ++y)

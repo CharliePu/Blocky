@@ -47,10 +47,9 @@ public:
 private:
 	GLuint vao, vbo, debugVao, debugVbo;
 	std::vector<Vertex> vertexBuffer;
-	std::array<GLsizei, static_cast<int>(Block::Type::COUNT) + 1> verticesOffset;
+	std::array<GLsizei, static_cast<size_t>(Block::Type::COUNT) + 1> verticesOffset;
 
 	bool needPrepare;
-
 
 	void addBlockVertices(const Block::Position & x, const Block::Position & y, const Block::Position & z, std::vector<Vertex> &verticesGroups);
 };

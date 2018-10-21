@@ -1,7 +1,42 @@
-﻿  Main.cpp
+﻿  Block.cpp
+  Chunk.cpp
+d:\codings\c++\blocky\src\chunk.cpp(9): warning C4244: 'initializing': conversion from 'double' to 'Block::GlobalPosition', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(10): warning C4244: 'initializing': conversion from 'double' to 'Block::GlobalPosition', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(126): warning C4305: 'argument': truncation from 'int' to 'GLboolean'
+d:\codings\c++\blocky\src\chunk.cpp(126): warning C4309: 'argument': truncation of constant value
+d:\codings\c++\blocky\src\chunk.cpp(229): warning C4838: conversion from 'int' to 'GLfloat' requires a narrowing conversion
+d:\codings\c++\blocky\src\chunk.cpp(194): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(195): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(197): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(198): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(200): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(201): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(203): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(204): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(206): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(207): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(209): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(210): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(212): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(213): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(215): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(216): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(218): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(219): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(221): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(222): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(224): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(225): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(227): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(228): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+  Main.cpp
+  Player.cpp
+  Structures.cpp
+  Texture.cpp
+  World.cpp
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Generating code
-  2 of 1743 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+  38 of 1746 functions ( 2.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

@@ -5,7 +5,7 @@ GLCamera::GLCamera(
 	const FloatType speed,
 	const FloatType cursorSensitivity) :
 	front(0, 0, 1), position(position), up(0, 1, 0),
-	speed(speed), cursorSensitivity(cursorSensitivity)
+	speed(3), cursorSensitivity(cursorSensitivity)
 {}
 
 

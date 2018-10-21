@@ -43,12 +43,12 @@ vec3 applyDirLight(vec3 color)
 
 vec4 applyFog(vec4 color)
 {
-	float fogDensity = 0.003;
+	float fogDensity = 0.001;
 	
 	float fogFactor = 1.0 / exp(distanceToCamera * fogDensity * distanceToCamera * fogDensity);
 	fogFactor = clamp(fogFactor, 0.0f, 1.0f);
 
-	return mix(vec4(0.5f, 0.8f, 1.0f, 0.0f), color, fogFactor);
+	return mix(vec4(0.5f, 0.8f, 1.0f, 1.0f), color, fogFactor);
 }
 
 vec4 applyLinearFog(vec4 color)
@@ -63,7 +63,7 @@ void main()
 
 	color = vec4(applyDirLight(vec3(color)), color.w);
 
-	//color = applyFog(color);
+	color = applyFog(color);
 
 	//vec4(Normal.r*2+Normal.g*4+Normal.b*8)/40);
 }

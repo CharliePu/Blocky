@@ -20,7 +20,7 @@ public:
 #ifdef _DEBUG
 		3
 #else
-		10
+		8
 #endif
 		;
 
