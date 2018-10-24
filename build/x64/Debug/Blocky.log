@@ -28,7 +28,13 @@ d:\codings\c++\blocky\src\chunk.cpp(224): warning C4244: 'initializing': convers
 d:\codings\c++\blocky\src\chunk.cpp(225): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
 d:\codings\c++\blocky\src\chunk.cpp(227): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
 d:\codings\c++\blocky\src\chunk.cpp(228): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+  GLTexture.cpp
+d:\codings\c++\blocky\src\gltexture.cpp(54): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+d:\codings\c++\blocky\src\gltexture.cpp(56): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  Image.cpp
+  Main.cpp
   Player.cpp
+  Texture.cpp
   World.cpp
   Generating Code...
   SOIL.lib(SOIL.obj) : MSIL .netmodule or module compiled with /GL found; restarting link with /LTCG; add /LTCG to the link command line to improve linker performance
@@ -86,8 +92,9 @@ GLShader.obj : warning LNK4049: locally defined symbol __glewLinkProgram importe
 GLShader.obj : warning LNK4049: locally defined symbol __glewShaderSource imported
 GLShader.obj : warning LNK4049: locally defined symbol __glewUniformMatrix4fv imported
 GLShader.obj : warning LNK4049: locally defined symbol __glewUseProgram imported
-GLTexture.obj : warning LNK4049: locally defined symbol __glewTexImage3D imported
+GLTexture.obj : warning LNK4049: locally defined symbol __glewTexSubImage3D imported
 GLTexture.obj : warning LNK4049: locally defined symbol __glewGenerateMipmap imported
+GLTexture.obj : warning LNK4049: locally defined symbol __glewTexStorage3D imported
 Shadow.obj : warning LNK4049: locally defined symbol __glewCheckFramebufferStatus imported
 SOIL.lib(SOIL.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'SOIL.lib(SOIL.obj)' or at 'D:\Codings\C++\Blocky\build\x64\Debug\SOIL.pdb'; linking object as if no debug info
 SOIL.lib(image_helper.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'SOIL.lib(image_helper.obj)' or at 'D:\Codings\C++\Blocky\build\x64\Debug\SOIL.pdb'; linking object as if no debug info

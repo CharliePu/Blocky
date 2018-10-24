@@ -1,5 +1,4 @@
 #pragma once
-
 #include <math.h>
 
 #include "World.h"
@@ -9,14 +8,19 @@ class Player :
 	public GLCamera
 {
 public:
-
-	Player() : GLCamera::GLCamera(PositionVec(0, 150, 0), 20.0f) {}
-	bool collide(PositionVec & pos, const DirectionVec & displace);
-
 	static constexpr float height = 1.8f;
 	static constexpr float width = 0.4f;
 	static constexpr float length = 0.4f;
 	static constexpr int selectRadius = 5;
+#ifdef _DEBUG
+	static constexpr double speed = 30;
+#else
+	static constexpr double speed = 3;
+#endif
+
+
+	Player() : GLCamera::GLCamera(PositionVec(0, 150, 0), speed) {}
+	bool collide(PositionVec & pos, const DirectionVec & displace);
 
 	Block::GlobalPosVec selectPos;
 	Block::Face selectFace;
@@ -25,7 +29,7 @@ public:
 	void selectUpdate();
 	void selectDraw();
 	bool putBlockNearFace(const Block::GlobalPosVec & pos, const Block::Face face, const Block::Type type);
-
+	
 private:
 	void updateKeyCallback(GLFWwindow * window) override;
 	void updateCursorCallback(GLFWwindow * window) override;

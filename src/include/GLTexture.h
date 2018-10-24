@@ -2,11 +2,13 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sstream>
+
+#include "Image.h"
 
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 #include <glm\glm.hpp>
-#include <SOIL/SOIL.h>
 
 
 class GLTexture
@@ -14,15 +16,16 @@ class GLTexture
 public:
 	GLTexture();
 
-	bool load(const std::string &path);
+	virtual bool load(const std::vector<std::string> &paths);
+	virtual void use();
+protected:
 
-	bool loadMultipleAsTextureArray(const std::vector<std::string>& paths);
-
-	bool loadMipMap(const std::vector<std::string>& paths);
-
-	void use();
-
-	glm::vec2 static getTextureAtlasCoords(const unsigned short & xNum, const unsigned short & yNum, const unsigned short & subTextureID, const glm::vec2 &subTexCoords);
-private:
 	GLuint id;
+};
+
+class GLTextureArray: public GLTexture
+{
+	virtual bool load(const std::vector<std::string> &paths) override;
+	virtual void use() override;
+	
 };

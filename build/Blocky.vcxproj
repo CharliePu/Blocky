@@ -20,10 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\include\GLFrameBuffer.hpp" />
+    <ClInclude Include="..\src\include\Image.h" />
+    <ClInclude Include="..\src\include\Player.h" />
     <ClInclude Include="..\src\include\Shadow.h" />
     <ClInclude Include="..\src\include\Structures.h" />
     <ClInclude Include="..\src\include\ThreadSafeWrapper.hpp" />
-    <ClInclude Include="..\src\Player.h" />
     <ClInclude Include="..\src\include\Block.h" />
     <ClInclude Include="..\src\include\Chunk.h" />
     <ClInclude Include="..\src\include\GLCamera.h" />
@@ -37,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Block.cpp" />
+    <ClCompile Include="..\src\Image.cpp" />
     <ClCompile Include="..\src\Player.cpp" />
     <ClCompile Include="..\src\Chunk.cpp" />
     <ClCompile Include="..\src\GLCamera.cpp" />
