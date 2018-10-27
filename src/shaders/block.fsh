@@ -1,8 +1,8 @@
 #version 330 core
-in vec2 TexCoords;
+in vec3 TexCoords;
 in vec3 Normal;
 
-uniform sampler2D texture_diffuse1;
+uniform sampler2DArray texture_diffuse;
 
 //lighting
 uniform vec3 cameraPos;
@@ -59,7 +59,7 @@ vec4 applyLinearFog(vec4 color)
 
 void main()
 {
-	color = texture(texture_diffuse1,TexCoords);
+	color = texture(texture_diffuse, TexCoords);
 
 	color = vec4(applyDirLight(vec3(color)), color.w);
 

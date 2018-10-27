@@ -1,40 +1,35 @@
 ﻿  Chunk.cpp
 d:\codings\c++\blocky\src\chunk.cpp(9): warning C4244: 'initializing': conversion from 'double' to 'Block::GlobalPosition', possible loss of data
 d:\codings\c++\blocky\src\chunk.cpp(10): warning C4244: 'initializing': conversion from 'double' to 'Block::GlobalPosition', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(126): warning C4305: 'argument': truncation from 'int' to 'GLboolean'
-d:\codings\c++\blocky\src\chunk.cpp(126): warning C4309: 'argument': truncation of constant value
-d:\codings\c++\blocky\src\chunk.cpp(229): warning C4838: conversion from 'int' to 'GLfloat' requires a narrowing conversion
-d:\codings\c++\blocky\src\chunk.cpp(194): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(124): warning C4305: 'argument': truncation from 'int' to 'GLboolean'
+d:\codings\c++\blocky\src\chunk.cpp(124): warning C4309: 'argument': truncation of constant value
+d:\codings\c++\blocky\src\chunk.cpp(227): warning C4838: conversion from 'int' to 'GLfloat' requires a narrowing conversion
+d:\codings\c++\blocky\src\chunk.cpp(192): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(193): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
 d:\codings\c++\blocky\src\chunk.cpp(195): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(197): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(196): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
 d:\codings\c++\blocky\src\chunk.cpp(198): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(200): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(199): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
 d:\codings\c++\blocky\src\chunk.cpp(201): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(203): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(202): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
 d:\codings\c++\blocky\src\chunk.cpp(204): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(206): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(205): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
 d:\codings\c++\blocky\src\chunk.cpp(207): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(209): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(208): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
 d:\codings\c++\blocky\src\chunk.cpp(210): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(212): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(211): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
 d:\codings\c++\blocky\src\chunk.cpp(213): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(215): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(214): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
 d:\codings\c++\blocky\src\chunk.cpp(216): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(218): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(217): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
 d:\codings\c++\blocky\src\chunk.cpp(219): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(221): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(220): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
 d:\codings\c++\blocky\src\chunk.cpp(222): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(224): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+d:\codings\c++\blocky\src\chunk.cpp(223): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
 d:\codings\c++\blocky\src\chunk.cpp(225): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(227): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-d:\codings\c++\blocky\src\chunk.cpp(228): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-  GLTexture.cpp
-d:\codings\c++\blocky\src\gltexture.cpp(54): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-d:\codings\c++\blocky\src\gltexture.cpp(56): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-  Image.cpp
+d:\codings\c++\blocky\src\chunk.cpp(226): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
   Main.cpp
   Player.cpp
-  Texture.cpp
   World.cpp
   Generating Code...
   SOIL.lib(SOIL.obj) : MSIL .netmodule or module compiled with /GL found; restarting link with /LTCG; add /LTCG to the link command line to improve linker performance
@@ -92,9 +87,9 @@ GLShader.obj : warning LNK4049: locally defined symbol __glewLinkProgram importe
 GLShader.obj : warning LNK4049: locally defined symbol __glewShaderSource imported
 GLShader.obj : warning LNK4049: locally defined symbol __glewUniformMatrix4fv imported
 GLShader.obj : warning LNK4049: locally defined symbol __glewUseProgram imported
+GLTexture.obj : warning LNK4049: locally defined symbol __glewTexImage3D imported
 GLTexture.obj : warning LNK4049: locally defined symbol __glewTexSubImage3D imported
 GLTexture.obj : warning LNK4049: locally defined symbol __glewGenerateMipmap imported
-GLTexture.obj : warning LNK4049: locally defined symbol __glewTexStorage3D imported
 Shadow.obj : warning LNK4049: locally defined symbol __glewCheckFramebufferStatus imported
 SOIL.lib(SOIL.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'SOIL.lib(SOIL.obj)' or at 'D:\Codings\C++\Blocky\build\x64\Debug\SOIL.pdb'; linking object as if no debug info
 SOIL.lib(image_helper.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'SOIL.lib(image_helper.obj)' or at 'D:\Codings\C++\Blocky\build\x64\Debug\SOIL.pdb'; linking object as if no debug info

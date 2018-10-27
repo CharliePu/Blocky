@@ -2,6 +2,7 @@
 GLFWwindow* window;
 int windowWidth, windowHeight;
 World aWorld;
+TexturePack texture;
 Player player;
 GLLighting::DirectionLight sun;
 
@@ -67,16 +68,13 @@ void initEnv()
 	}
 
 	//set opengl parameters
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 	glfwWindowHint(GLFW_SAMPLES, 4);
 
 	//create glfw window
 	windowWidth = 2000;
 	windowHeight = 1500;
-	window = glfwCreateWindow(windowWidth, windowHeight, "EasyMinecraft", nullptr, nullptr);
+	window = glfwCreateWindow(windowWidth, windowHeight, "Blocky", nullptr, nullptr);
 	if (window == nullptr)
 	{
 		std::cerr << "Failed to create GLFW window" << std::endl;
@@ -107,13 +105,13 @@ void initEnv()
 	//Gamma correction
 	//glEnable(GL_FRAMEBUFFER_SRGB);
 
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+//	glEnable(GL_CULL_FACE);
+//	glCullFace(GL_BACK);
 
 	glClearColor(0.5f, 0.8f, 1.0f, 0.0f);
 
 	//init textures
-	Texture::init("..\\src\\resource\\");
+	texture.init("..\\src\\resource\\");
 }
 
 void updateEnv()

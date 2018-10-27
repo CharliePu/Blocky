@@ -3,6 +3,7 @@
 
 //Must delete afterward: create Camera.cpp
 extern Player player;
+extern TexturePack texture;
 
 
 //Must initialize after GL is set up.
@@ -30,6 +31,7 @@ void World::removeAll()
 
 void World::draw()
 {
+	texture.apply();
 	frontBufferLock.lock();
 	for (auto i : frontDrawBuffer)
 	{
@@ -57,11 +59,6 @@ void World::update()
 	//	i->updateProperties();
 	//}
 	//frontBufferLock.unlock();
-}
-
-void World::drawBlend()
-{
-	
 }
 
 void World::drawDebug()

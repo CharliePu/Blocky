@@ -93,7 +93,7 @@ void Chunk::prepare()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, normal));
 	//set texCoords
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texCoord));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texCoord));
 	glBindVertexArray(NULL);
 
 	//free memory
@@ -112,7 +112,6 @@ void Chunk::draw()
 		for (int i = 1; i != static_cast<int>(Block::Type::COUNT); ++i)
 			if (i != static_cast<int>(Block::Type::WATER))
 			{
-				Texture::get(static_cast<Block::Type>(i)).use();
 				glDrawArrays(GL_TRIANGLES, verticesOffset[i], verticesOffset[i + 1] - verticesOffset[i]);
 			}
 	glBindVertexArray(NULL);
@@ -121,7 +120,6 @@ void Chunk::draw()
 void Chunk::drawBlend()
 {
 	glBindVertexArray(this->vao);
-	Texture::get(Block::Type::WATER).use();
 	glDrawArrays(GL_TRIANGLES, verticesOffset[static_cast<size_t>(Block::Type::WATER)], verticesOffset[static_cast<size_t>(Block::Type::WATER) + 1] - verticesOffset[static_cast<size_t>(Block::Type::WATER)]);
 	glDepthMask(GL_LESS);
 	glBindVertexArray(NULL);
@@ -292,7 +290,9 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		down(data[x][y - 1][z]),
 		front(data[x][y][z + 1]),
 		back(data[x][y][z - 1]);
-	
+
+	//texture array
+	float texCoordZ = static_cast<float>(type);
 	//right
 	if (right == Block::Type::AIR || right == Block::Type::WATER && type != right)
 	{
@@ -300,7 +300,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		for (auto i = 0; i < 6; i++)
 		{
 			temp.position = Block::vertexPositions[Block::vertexIndices[0][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
-			temp.texCoord = Block::vertexTexCoords[i];
+			temp.texCoord = glm::vec3(Block::vertexTexCoords[i], texCoordZ);
 			verticesGroups.push_back(temp);
 		}
 	}
@@ -311,7 +311,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		for (auto i = 0; i < 6; i++)
 		{
 			temp.position = Block::vertexPositions[Block::vertexIndices[1][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
-			temp.texCoord = Block::vertexTexCoords[i];
+			temp.texCoord = glm::vec3(Block::vertexTexCoords[i], texCoordZ);
 			verticesGroups.push_back(temp);
 		}
 	}
@@ -322,7 +322,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		for (auto i = 0; i < 6; i++)
 		{
 			temp.position = Block::vertexPositions[Block::vertexIndices[2][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
-			temp.texCoord = Block::vertexTexCoords[i];
+			temp.texCoord = glm::vec3(Block::vertexTexCoords[i], texCoordZ);
 			verticesGroups.push_back(temp);
 		}
 	}
@@ -333,7 +333,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		for (auto i = 0; i < 6; i++)
 		{
 			temp.position = Block::vertexPositions[Block::vertexIndices[3][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
-			temp.texCoord = Block::vertexTexCoords[i];
+			temp.texCoord = glm::vec3(Block::vertexTexCoords[i], texCoordZ);
 			verticesGroups.push_back(temp);
 		}
 	}
@@ -344,7 +344,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		for (auto i = 0; i < 6; i++)
 		{
 			temp.position = Block::vertexPositions[Block::vertexIndices[4][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
-			temp.texCoord = Block::vertexTexCoords[i];
+			temp.texCoord = glm::vec3(Block::vertexTexCoords[i], texCoordZ);
 			verticesGroups.push_back(temp);
 		}
 	}
@@ -355,7 +355,7 @@ void Chunk::addBlockVertices(const Block::Position &x, const Block::Position &y,
 		for (auto i = 0; i < 6; i++)
 		{
 			temp.position = Block::vertexPositions[Block::vertexIndices[5][i]] + glm::vec3(x + chunkX * Chunk::sizeX, y, z + chunkZ * Chunk::sizeZ) + glm::vec3(-1);
-			temp.texCoord = Block::vertexTexCoords[i];
+			temp.texCoord = glm::vec3(Block::vertexTexCoords[i], texCoordZ);
 			verticesGroups.push_back(temp);
 		}
 	}

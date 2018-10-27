@@ -31,7 +31,6 @@ public:
 	//render chunks
 	void draw();
 	void update();
-	void drawBlend();
 	void drawDebug();
 
 	void updateCurrentChunkPosition();

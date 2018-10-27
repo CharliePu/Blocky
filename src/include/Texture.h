@@ -6,11 +6,13 @@
 #include "Block.h"
 #include "GLTexture.h"
 
-namespace Texture
+class TexturePack
 {
-	//construct it after GL is initialized
+public:
+	TexturePack() : textures(), paths(static_cast<size_t>(Block::Type::COUNT), std::string()) {}
 	void init(const std::string &path);
-	
-	GLTexture get(Block::Type type);
-	glm::vec2 getTextureAtlasCoords(const unsigned short & subTextureID, const glm::vec2 & subTexCoords);
+	void apply();
+private:
+	GLTextureArray textures;
+	std::vector<std::string> paths;
 };

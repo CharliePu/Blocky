@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <algorithm>
 
 #include "Image.h"
 
@@ -25,6 +26,7 @@ protected:
 
 class GLTextureArray: public GLTexture
 {
+public:
 	virtual bool load(const std::vector<std::string> &paths) override;
 	virtual void use() override;
 	
